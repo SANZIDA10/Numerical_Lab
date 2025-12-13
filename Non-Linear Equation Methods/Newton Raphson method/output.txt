@@ -1,0 +1,12 @@
+Newton-Raphson Method
+Search interval: -2.230000 to 2.230000
+
+Interval [-1.230000, -0.730000] seems to contain a root.
+The root -1.000000 is found after 4 iterations.
+
+Interval [-0.230000, 0.270000] seems to contain a root.
+The root 0.000000 is found after 3 iterations.
+
+Interval [0.770000, 1.270000] seems to contain a root.
+The root 1.000000 is found after 5 iterations.
+

@@ -1,0 +1,8 @@
+The search interval is: -2.240000 to 2.240000
+
+iterations : 4
+The roots are in between -1.040000 and -0.940000 the root is = -0.999999
+
+iterations : 2
+The roots are in between -0.040000 and 0.060000 the root is = -0.000014
+
