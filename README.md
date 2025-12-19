@@ -1317,7 +1317,7 @@ x = 5 , y = 5.8000
 
 [Add your Transcendental Curve Fitting theory here]
 
-#### Transcendental Code
+#### Transcendental Code 
 ```cpp
 #include <bits/stdc++.h>//y=ae^bx
 using namespace std;
