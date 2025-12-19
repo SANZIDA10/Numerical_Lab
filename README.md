@@ -897,21 +897,89 @@ Add your Runge-Kutta output here
 
 #### Newtons Forward Theory
 
-[Add your Newton's Forward Interpolation theory here]
+
+-Newton’s forward interpolation method is used to estimate values near the beginning of a table when data points(x is data point) are equally spaced.
+
+-Let x₀, x₁, x₂, … , xₙ₋₁, xₙ  be a set of equally spaced values of the independent variable x.
+
+-So x₁ − x₀ = x₂ − x₁ = x₃ − x₂ = … = xₙ − xₙ₋₁ = h
+
+-Let, u = (x − x₀) / h
+
+-The Newton’s forward difference interpolation formula for equal intervals is:
+    y = y₀ + u Δy₀ + [u(u − 1) / 2!] Δ²y₀+ [u(u − 1)(u − 2) / 3!] Δ³y₀+ … + [u(u − 1)(u − 2) … (u − n - 1) / n!] Δⁿy₀
+
 
 #### Newtons Forward Code
 ```cpp
-// Add your Newton's Forward Interpolation code here
+#include <bits/stdc++.h>
+using namespace std;
+
+double facto(int n){
+    double f=1;
+    for(int i=2;i<=n;i++)f*=i;
+    return f;
+}
+
+int main(){
+    int n;cin>>n;
+    vector<double>x(n),y(n);
+
+    for(int i=0;i<n;i++)
+        cin>>x[i]>>y[i];
+
+    double x_val;cin>>x_val;
+
+    vector<vector<double>>diff(n,vector<double>(n));
+
+    for(int i=0;i<n;i++)
+        diff[i][0]=y[i];
+
+    for(int j=1;j<n;j++){
+        for(int i=0;i<n-j;i++){
+            diff[i][j]=diff[i+1][j-1]-diff[i][j-1];
+            diff[i][j]=round(diff[i][j]*1e6)/1e6;
+        }
+    }
+    cout<<"Forward Difference Table:\n";
+    for(int i=0;i<n;i++){
+        cout<<setw(6)<<x[i];
+        for(int j=0;j<n-i;j++)
+            cout<<setw(10)<<diff[i][j];
+        cout<<endl;
+    }
+    double h=x[1]-x[0],u=(x_val-x[0])/h,ans=diff[0][0],u_prod=1;
+    for(int i=1;i<n;i++){
+        u_prod*=(u-(i-1));
+        ans+=(u_prod*diff[0][i])/facto(i);
+    }
+    cout<<"\nInterpolated Value at x="<<x_val<<" is: "<<ans<<endl;
+    return 0;
+}
 ```
 
 #### Newtons Forward Input
 ```
-Add your Newton's Forward Interpolation input here
+5
+1 1
+2 8
+3 27
+4 64
+5 125
+2.5
+
 ```
 
 #### Newtons Forward Output
 ```
-Add your Newton's Forward Interpolation output here
+Forward Difference Table:
+     1         1         7        12         6         0
+     2         8        19        18         6
+     3        27        37        24
+     4        64        61
+     5       125
+
+Interpolated Value at x=2.5 is: 15.625
 ```
 
 ---
@@ -920,21 +988,84 @@ Add your Newton's Forward Interpolation output here
 
 #### Newtons Backward Theory
 
-[Add your Newton's Backward Interpolation theory here]
+ -Backward interpolation is used when the value of x lies near the end of the table.
+ 
+ -Let x₀, x₁, x₂, … , xₙ₋₁, xₙ be a set of equally spaced values of the independent variable x.
+ -The interval between successive values is constant, i.e., x₁ − x₀ = x₂ − x₁ = x₃ − x₂ = … = xₙ − xₙ₋₁ = h
+ -Let, u = (x − xₙ) / h
+ -The Newton’s backward difference interpolation formula for equal intervals is:
+  y = yₙ + u∇yₙ+ [u(u + 1) / 2!] ∇²yₙ+ [u(u + 1)(u + 2) / 3!] ∇³yₙ+ … + [u(u + 1)(u + 2)…(u + n − 1) / n!] ∇ⁿyₙ
+
 
 #### Newtons Backward Code
 ```cpp
-// Add your Newton's Backward Interpolation code here
+#include <bits/stdc++.h>
+using namespace std;
+
+double facto(int n){
+    double f=1;
+    for(int i=2;i<=n;i++)f*=i;
+    return f;
+}
+
+int main(){
+    int n;cin>>n;
+    vector<double>x(n),y(n);
+    for(int i=0;i<n;i++)cin>>x[i]>>y[i];
+    double x_val;cin>>x_val;
+
+    vector<vector<double>>diff(n,vector<double>(n));
+    for(int i=0;i<n;i++)diff[i][0]=y[i];
+
+    for(int j=1;j<n;j++)
+        for(int i=n-1;i>=j;i--){
+            diff[i][j]=diff[i][j-1]-diff[i-1][j-1];
+            diff[i][j]=round(diff[i][j]*1e6)/1e6;
+        }
+
+    cout<<"Backward Difference Table:\n";
+    for(int i=0;i<n;i++){
+        cout<<setw(6)<<x[i];
+        for(int j=0;j<=i;j++)cout<<setw(10)<<diff[i][j];
+        cout<<endl;
+    }
+
+    double h=x[1]-x[0];
+    double u=(x_val-x[n-1])/h;
+    double ans=diff[n-1][0],u_prod=1;
+    for(int i=1;i<n;i++){
+        u_prod*=(u+(i-1));
+        ans+=(u_prod*diff[n-1][i])/facto(i);
+    }
+
+    cout<<"\nInterpolated Value at x="<<x_val<<" is: "<<ans<<endl;
+    return 0;
+}
+
 ```
 
 #### Newtons Backward Input
 ```
-Add your Newton's Backward Interpolation input here
+5
+1 1
+2 8
+3 27
+4 64
+5 125
+4.5
 ```
 
 #### Newtons Backward Output
 ```
-Add your Newton's Backward Interpolation output here
+Backward Difference Table:
+     1         1
+     2         8         7
+     3        27        19        12
+     4        64        37        18         6
+     5       125        61        24         6         0
+
+Interpolated Value at x=4.5 is: 91.125
+
 ```
 
 ---
@@ -943,21 +1074,80 @@ Add your Newton's Backward Interpolation output here
 
 #### Divided Difference Theory
 
-[Add your Divided Difference Method theory here]
+-The Newton’s Divided Difference Interpolation Method is used to estimate the value of a function when the given data points are not equally spaced.
+
+-The interpolation polynomial is given by:
+
+f(xₙ)= f(x₀) + (x - x₀) f [x₁, x₀] + (x - x₀)(x - x₁) f[x₂, x₁, x₀] +...+ (x - x₀)(x - x₁)...(x − xₙ₋₁) f[xₙ, xₙ₋₁,..., x₁, x₀]...(1)
+
+Here divided differences are defined as:
+
+-First order divided difference:
+f [ xᵢ, xⱼ ] = [ f(xᵢ) - f(xⱼ) ] / xᵢ - xⱼ …..(2)
+
+-Second order divided difference:
+f [ xᵢ, xⱼ, xₖ ] = [ f(xᵢ, xⱼ) - f(xⱼ, xₖ) ] / xᵢ - xₖ …..(3)
+
 
 #### Divided Difference Code
 ```cpp
-// Add your Divided Difference Method code here
+#include <iostream>
+#include <iomanip>
+using namespace std;
+
+int main(){
+    int n;
+    cin>>n;
+
+    double x[50],y[50][50],X;
+
+    for(int i=0;i<n;i++)
+        cin>>x[i]>>y[i][0];
+
+    cin>>X;
+
+    for(int j=1;j<n;j++)
+        for(int i=0;i<n-j;i++)
+            y[i][j]=(y[i+1][j-1]-y[i][j-1])/(x[i+j]-x[i]);
+
+    cout<<"Divided Difference Table:\n";
+    for(int i=0;i<n;i++){
+        cout<<setw(6)<<x[i];
+        for(int j=0;j<n-i;j++)
+            cout<<setw(12)<<y[i][j];
+        cout<<endl;
+    }
+
+    double ans=y[0][0],term=1;
+    for(int i=1;i<n;i++){
+        term*=(X-x[i-1]);
+        ans+=term*y[0][i];
+    }
+
+    cout<<"\nInterpolated value: "<<ans<<endl;
+    return 0;
+}
 ```
 
 #### Divided Difference Input
 ```
-Add your Divided Difference Method input here
+4
+1 1
+2 4
+4 16
+7 49
+3
 ```
 
 #### Divided Difference Output
 ```
-Add your Divided Difference Method output here
+Divided Difference Table:
+     1           1           3           1           0
+     2           4           6           1
+     4          16          11
+     7          49
+
+Interpolated value: 9
 ```
 
 ---
@@ -966,21 +1156,83 @@ Add your Divided Difference Method output here
 
 #### Numerical Differentiation Theory
 
-[Add your Numerical Differentiation theory here]
+-This formula is the Newton’s Forward Differentiation Formula, used to find the first derivative of a function when the tabulated values of x are equally spaced.
+
+-Let, x₀, x₁, x₂, … , xₙ be equally spaced values with h = x₁ − x₀
+
+-Let, u = (x − x₀) / h measures how far the point x is from the starting value x0​ in terms of step size.
+
+-So, the first derivative formula for forward differentiation is:
+y’ = (1/h) [ Δy₀ + (2u − 1)/2! · Δ²y₀ + (3u² − 6u + 2)/3! · Δ³y₀ + (4u³ − 18u² + 22u - 6)/4! · Δ⁴y₀ + … ]
+
+-Δy0,Δ^2y0,Δ^3y0​,… are forward differences of the function values.
 
 #### Numerical Differentiation Code
 ```cpp
-// Add your Numerical Differentiation code here
+#include <iostream>
+#include <iomanip>
+using namespace std;
+
+double facto(int n){
+    double f=1;
+    for(int i=2;i<=n;i++)f*=i;
+    return f;
+}
+
+int main(){
+    int n;cin>>n;
+    double x[50],y[50][50],X;
+
+    for(int i=0;i<n;i++)cin>>x[i]>>y[i][0];
+    cin>>X;
+
+    for(int j=1;j<n;j++)
+        for(int i=0;i<n-j;i++)
+            y[i][j]=y[i+1][j-1]-y[i][j-1];
+
+    cout<<"Forward Difference Table:\n";
+    for(int i=0;i<n;i++){
+        cout<<setw(6)<<x[i];
+        for(int j=0;j<n-i;j++)
+            cout<<setw(10)<<y[i][j];
+        cout<<endl;
+    }
+
+    double h=x[1]-x[0];
+    double u=(X-x[0])/h;
+
+    double dydx=y[0][1]+(2*u-1)*y[0][2]/2 +(3*u*u-6*u+2)*y[0][3]/6;
+
+    dydx/=h;
+
+    cout<<"\nFirst derivative at x="<<X<<" is: "<<dydx<<endl;
+    return 0;
+}
+
 ```
 
 #### Numerical Differentiation Input
 ```
-Add your Numerical Differentiation input here
+5
+1 1
+2 8
+3 27
+4 64
+5 125
+2
 ```
 
 #### Numerical Differentiation Output
 ```
-Add your Numerical Differentiation output here
+Forward Difference Table:
+     1         1         7        12         6         0
+     2         8        19        18         6
+     3        27        37        24
+     4        64        61
+     5       125
+
+First derivative at x=2 is: 12
+
 ```
 
 ---
@@ -997,17 +1249,63 @@ Add your Numerical Differentiation output here
 
 #### Linear Code
 ```cpp
-// Add your Linear Curve Fitting code here
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+    int n;
+    cin>>n;
+
+    vector<double>x(n),y(n);
+    for(int i=0;i<n;i++)
+        cin>>x[i]>>y[i];
+
+    double sumx =0,sumy=0,sumxy=0, sumx2=0;
+
+    for (int i=0;i<n;i++) {
+        sumx  += x[i];
+        sumy  += y[i];
+        sumxy += x[i]*y[i];
+        sumx2 += x[i]*x[i];
+    }
+
+    double b=(n*sumxy-sumx* sumy)/(n*sumx2-sumx*sumx);
+    double a=(sumy-b*sumx)/n;
+
+    cout<<fixed<<setprecision(4);
+    cout<<"a(intercept) = "<<a<<"\n";
+    cout<<"b(slope) = "<<b<<"\n\n";
+
+    cout<<"Predicted y values:\n";
+    for(int i =0; i<n; i++) {
+        double y_calc=a+b*x[i];
+        cout<<"x = "<<x[i]<<", y = "<<y_calc<<"\n";
+    }
+    return 0;
+}
 ```
 
 #### Linear Input
 ```
-Add your Linear Curve Fitting input here
+5
+1 2
+2 3
+3 5
+4 4
+5 6
 ```
 
 #### Linear Output
 ```
-Add your Linear Curve Fitting output here
+a (intercept) = 1.3000
+b (slope) = 0.9000
+
+Predicted y values:
+x = 1 , y = 2.2000
+x = 2 , y = 3.1000
+x = 3 , y = 4.0000
+x = 4 , y = 4.9000
+x = 5 , y = 5.8000
 ```
 
 ---
@@ -1020,17 +1318,72 @@ Add your Linear Curve Fitting output here
 
 #### Transcendental Code
 ```cpp
-// Add your Transcendental Curve Fitting code here
+#include <bits/stdc++.h>//y=ae^bx
+using namespace std;
+
+int main() {
+
+    int n;
+    cin>>n;
+
+    vector<double>x(n),y(n);
+    for (int i=0;i<n;i++)
+        cin>>x[i]>>y[i];
+
+    double sumx =0, sumY =0, sumxY =0, sumx2 =0;
+
+    for (int i=0; i <n; i++) {
+        double Y = log(y[i]);   // Y = ln(y)
+        sumx  +=x[i];
+        sumY  +=Y;
+        sumxY +=x[i]*Y;
+        sumx2 +=x[i]*x[i];
+    }
+
+    double B =(n * sumxY -sumx *sumY)/(n * sumx2 -sumx *sumx);
+    double A =(sumY - B * sumx)/n;
+
+    double a =exp(A);
+    double b =B;
+
+    cout<<fixed<<setprecision(6);
+    cout<<"a = "<<a<<"\n";
+    cout<<"b = "<<b<<"\n";
+    cout<<"Model: y = "<<a<<" * e^("<<b<<"x)\n\n";
+
+    cout<<"Calculated y values:\n";
+    for (int i= 0;i<n;i++) {
+        double y_calc=a*exp(b* x[i]);
+        cout<<"x = "<< x[i]<<", y = "<<y_calc<<"\n";
+    }
+    return 0;
+}
 ```
+
 
 #### Transcendental Input
 ```
-Add your Transcendental Curve Fitting input here
+5
+1 2.7
+2 4.1
+3 6.2
+4 9.1
+5 13.5
+
 ```
 
 #### Transcendental Output
 ```
-Add your Transcendental Curve Fitting output here
+a = 1.827779
+b = 0.401616
+Model: y = 1.827779 * e^(0.401616x)
+
+Calculated y values:
+x = 1, y = 2.731136
+x = 2, y = 4.080968
+x = 3, y = 6.097936
+x = 4, y = 9.111768
+x = 5, y = 13.615149
 ```
 
 ---
