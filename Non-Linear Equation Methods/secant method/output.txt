@@ -1,0 +1,5 @@
+Secant Method
+Checking intervals for possible roots...
+
+Interval [0.270000, 0.770000] seems to contain a root.
+The root 0.607102 is found after 4 iterations.
