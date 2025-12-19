@@ -594,21 +594,80 @@ A linear equation is an equation in which the highest power (degree) of the vari
 
 #### Gauss Elimination Theory
 
-[Add your Gauss Elimination theory here]
+The Gauss Elimination Method is used to solve a system of linear equations by converting it into an upper triangular matrix and then solving it by back substitution.
+
+Steps:
+1.	Write the augmented matrix of the system of equations.
+2.	Forward Elimination:
+     o	Eliminate elements below the main diagonal using row operations.
+     o	Convert the matrix into an upper triangular form.
+3.	Back Substitution:
+     o	Start from the last row and calculate the value of the last variable.
+     o	Substitute this value into the rows above to find the remaining variables.
+4.	Result:
+     o	All variables are calculated step by step.
 
 #### Gauss Elimination Code
 ```cpp
-// Add your Gauss Elimination code here
+#include <iostream>
+#include <fstream>
+
+using namespace std;
+
+int main() {
+    ifstream fin("input3.txt");     
+    ofstream fout("output3.txt");   
+
+    int n;
+    fin >> n;
+
+    float a[10][11], x[10];
+
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j <= n; j++)
+            fin >> a[i][j];
+
+    for (int i = 0; i < n - 1; i++) {
+        for (int k = i + 1; k < n; k++) {
+            float f = a[k][i] / a[i][i];
+            for (int j = i; j <= n; j++)
+                a[k][j] -= f * a[i][j];
+        }
+    }
+
+    for (int i = n - 1; i >= 0; i--) {
+        x[i] = a[i][n];
+        for (int j = i + 1; j < n; j++)
+            x[i] -= a[i][j] * x[j];
+        x[i] /= a[i][i];
+    }
+
+    for (int i = 0; i < n; i++)
+        fout << "x" << i + 1 << " = " << x[i] << endl;
+
+    fin.close();
+    fout.close();
+
+    return 0;
+}
+
 ```
 
 #### Gauss Elimination Input
 ```
-Add your Gauss Elimination input here
+3
+2 1 -1 8
+-3 -1 2 -11
+-2 1 2 -3
+
 ```
 
 #### Gauss Elimination Output
 ```
-Add your Gauss Elimination output here
+x1 = 2
+x2 = 3
+x3 = -1
+
 ```
 
 ---
@@ -617,21 +676,80 @@ Add your Gauss Elimination output here
 
 #### Gauss Jordan Theory
 
-[Add your Gauss Jordan theory here]
+The Gauss–Jordan Elimination Method is used to solve a system of linear equations by reducing the augmented matrix to diagonal form (or reduced row echelon form), so that the solution can be read directly without back substitution.
+
+Steps:
+1.	Write the augmented matrix of the system of equations.
+2.	Forward Elimination:
+     o	Eliminate elements below the main diagonal to form an upper triangular matrix.
+3.	Backward Elimination:
+     o	Eliminate elements above the main diagonal to form a diagonal matrix.
+4.	Normalization:
+     o	Divide each row by its pivot element so that all diagonal elements become 1.
+5.	Result:
+     o	The solution of the system is directly obtained from the last column of the matrix.
+
 
 #### Gauss Jordan Code
 ```cpp
-// Add your Gauss Jordan code here
+#include <iostream>
+#include <fstream>
+
+using namespace std;
+
+int main() {
+    ifstream fin("input4.txt");
+    ofstream fout("output4.txt");
+
+    int n;
+    fin >> n;
+
+    float a[10][11];
+
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j <= n; j++)
+            fin >> a[i][j];
+
+    for (int i = 0; i < n; i++) {
+        float p = a[i][i];
+        for (int j = 0; j <= n; j++)
+            a[i][j] /= p;
+
+        for (int k = 0; k < n; k++) {
+            if (k != i) {
+                float f = a[k][i];
+                for (int j = 0; j <= n; j++)
+                    a[k][j] -= f * a[i][j];
+            }
+        }
+    }
+
+    for (int i = 0; i < n; i++)
+        fout << "x" << i + 1 << " = " << a[i][n] << endl;
+
+    fin.close();
+    fout.close();
+
+    return 0;
+}
+
 ```
 
 #### Gauss Jordan Input
 ```
-Add your Gauss Jordan input here
+3
+2 1 -1 8
+-3 -1 2 -11
+-2 1 2 -3
+
 ```
 
 #### Gauss Jordan Output
 ```
-Add your Gauss Jordan output here
+x1 = 2
+x2 = 3
+x3 = -1
+
 ```
 
 ---
@@ -944,21 +1062,88 @@ x3 = -1.33333
 
 #### Runge-Kutta Theory
 
-[Add your Runge-Kutta theory here]
+The Runge-Kutta 4th Order Method (RK4) is a numerical technique to solve ordinary differential equations (ODEs) of the form:
+    dy / dx = f(x , y) ,  y(x0) = y0
+It is more accurate than simple methods because it estimates the slope at multiple points within a step.
+
+Steps:
+1.	Start with initial values:
+       x = x0 ,   y = y0
+and choose a step size h.
+2.	Calculate intermediate slopes:
+      k1 = h ⋅ f( x, y )
+      k2 = h ⋅ f( x + h / 2 , y + k1 / 2)
+      k3 = h ⋅ f( x + h / 2 , y + k2 / 2)
+      k4 = h ⋅ f( x + h , y + k3 ) 
+3.	Update the solution:
+     y(next) = y + ( k1 + 2*k2 + 2*k3 + k4 ) / 6
+     x(next) = x + h 
+4.	Repeat the process until reaching the desired value of x = xn .
+
 
 #### Runge-Kutta Code
 ```cpp
-// Add your Runge-Kutta code here
+#include <iostream>
+#include <fstream>
+#include <iomanip>
+
+using namespace std;
+
+double f(double x, double y) {
+    return x + y * y;
+}
+
+int main() {
+    ifstream fin("input.txt");
+    ofstream fout("output.txt");
+
+    double x0, y0, xn, h;
+
+    fin >> x0;
+    fin >> y0;
+    fin >> xn;
+    fin >> h;
+
+    double x = x0;
+    double y = y0;
+    int iteration = 0;
+
+    while (x < xn) {
+        double k1 = h * f(x, y);
+        double k2 = h * f(x + h/2, y + k1/2);
+        double k3 = h * f(x + h/2, y + k2/2);
+        double k4 = h * f(x + h, y + k3);
+
+        y = y + (k1 + 2*k2 + 2*k3 + k4) / 6;
+        x = x + h;
+        iteration++;
+    }
+
+    fout << fixed << setprecision(5);
+    fout << "Value of y at x = " << xn << " is: " << y << endl;
+    fout << "Total iterations = " << iteration << endl;
+
+    fin.close();
+    fout.close();
+
+    return 0;
+}
 ```
 
 #### Runge-Kutta Input
 ```
-Add your Runge-Kutta input here
+0
+1
+0.2
+0.1
+
 ```
 
 #### Runge-Kutta Output
 ```
-Add your Runge-Kutta output here
+Value of y at x = 0.20000 is: 1.27356
+Total iterations = 2
+
 ```
 
 ---
@@ -1467,21 +1652,106 @@ x = 5, y = 13.615149
 
 #### Polynomial Theory
 
-[Add your Polynomial Curve Fitting theory here]
+Curve fitting is the process of finding a mathematical function that best approximates a set of data points. In polynomial curve fitting, we fit a polynomial of degree m to n data points (xi, yi).
+
+Steps:
+1.	Collect data points:
+     o	n pairs of (xi, yi).
+2.	Choose the degree m of the polynomial:
+     o	The polynomial has the form:
+          y = a0 + a1x + a2x^2 + ⋯ + amx^m
+3.	Form the normal equations:
+    o	Use the least squares method to minimize the sum of squared differences between actual and predicted values:
+          ∑(yi – polynomial)^2
+    o	This gives a system of linear equations in the unknown coefficients a0, a1 ,..., am.
+4.	Solve the system using Gaussian Elimination:
+    o	Find the coefficients a0, a1, ..., am.
+5.	Result:
+    o	The polynomial function y = a0 + a1x +...+ amx^m approximates the given data.
+
 
 #### Polynomial Code
 ```cpp
-// Add your Polynomial Curve Fitting code here
+#include <iostream>
+#include <fstream>
+#include <iomanip>
+#include <cmath>
+
+using namespace std;
+
+int main() {
+    ifstream fin("input5.txt");
+    ofstream fout("output5.txt");
+
+    int n, m;
+    fin >> n;
+    fin >> m;
+
+    double x[20], y[20];
+
+    for (int i = 0; i < n; i++)
+        fin >> x[i];
+
+    for (int i = 0; i < n; i++)
+        fin >> y[i];
+
+    double A[20][21] = {0};
+
+    for (int i = 0; i <= m; i++) {
+        for (int j = 0; j <= m; j++) {
+            for (int k = 0; k < n; k++)
+                A[i][j] += pow(x[k], i + j);
+        }
+        for (int k = 0; k < n; k++)
+            A[i][m + 1] += y[k] * pow(x[k], i);
+    }
+
+    for (int i = 0; i <= m; i++) {
+        for (int j = i + 1; j <= m; j++) {
+            double ratio = A[j][i] / A[i][i];
+            for (int k = 0; k <= m + 1; k++)
+                A[j][k] -= ratio * A[i][k];
+        }
+    }
+
+    double a[20];
+    for (int i = m; i >= 0; i--) {
+        a[i] = A[i][m + 1];
+        for (int j = i + 1; j <= m; j++)
+            a[i] -= A[i][j] * a[j];
+        a[i] /= A[i][i];
+    }
+
+    fout << fixed << setprecision(4);
+    fout << "y = ";
+    for (int i = 0; i <= m; i++) {
+        fout << a[i];
+        if (i > 0) fout << "x^" << i;
+        if (i != m) fout << " + ";
+    }
+    fout << endl;
+
+    fin.close();
+    fout.close();
+
+    return 0;
+}
+
 ```
 
 #### Polynomial Input
 ```
-Add your Polynomial Curve Fitting input here
+5
+2
+1 2 3 4 5
+2 4 5 4 5
+
 ```
 
 #### Polynomial Output
 ```
-Add your Polynomial Curve Fitting output here
+y = 0.3714 + 1.3143x^1 + 0.0857x^2
+
 ```
 
 ---
@@ -1492,46 +1762,160 @@ Add your Polynomial Curve Fitting output here
 
 ### Simpson's 1/3 Rule
 
-#### Simpsons 13 Theory
+#### Simpsons 1/3 Theory
 
-[Add your Simpson's 1/3 Rule theory here]
+Simpson’s 1/3 Rule is a numerical method used to approximate the definite integral of a function when the exact integration is difficult. It approximates the area under a curve using parabolic (quadratic) segments.
 
-#### Simpsons 13 Code
+Steps:
+1.	Divide the interval [a,b] into n sub-intervals, where n must be even.
+2.	Calculate the step size:
+     h = (b−a) / n
+3.	Apply the formula:
+     o	Multiply odd-indexed points by 4 and even-indexed points by 2.
+4.	Sum up the results to get the approximate value of the integral.
+
+
+#### Simpsons 1/3 Code
 ```cpp
-// Add your Simpson's 1/3 Rule code here
+#include <iostream>
+#include <fstream>
+#include <cmath>
+
+using namespace std;
+
+double f(double x) {
+    return sin(x);
+}
+
+int main() {
+    ifstream fin("input1.txt");
+    ofstream fout("output1.txt");
+
+    double a, b;
+    int n;
+
+    fin >> a >> b >> n;
+
+    if (n % 2 != 0) {
+        fout << "Error: Number of intervals must be even for Simpson's 1/3 Rule." << endl;
+        return 0;
+    }
+
+    double h = (b - a) / n;
+    double sum = f(a) + f(b);
+
+    for (int i = 1; i < n; i++) {
+        double x = a + i * h;
+        if (i % 2 == 0)
+            sum += 2 * f(x);  
+        else
+            sum += 4 * f(x);   
+    }
+
+    double I = (h / 3.0) * sum;
+
+    fout << "Value of integral : " << I << endl;
+
+    fin.close();
+    fout.close();
+
+    return 0;
+}
 ```
 
-#### Simpsons 13 Input
+#### Simpsons 1/3 Input
 ```
-Add your Simpson's 1/3 Rule input here
+0
+3.1416
+6
+
 ```
 
-#### Simpsons 13 Output
+#### Simpsons 1/3 Output
 ```
-Add your Simpson's 1/3 Rule output here
+Value of integral : 2.00086
+
 ```
 
 ---
 
 ### Simpson's 3/8 Rule
 
-#### Simpsons 38 Theory
+#### Simpsons 3/8 Theory
 
-[Add your Simpson's 3/8 Rule theory here]
+Simpson’s 3/8 Rule is a numerical method used to approximate the definite integral of a function when finding the exact integral is difficult. It is a type of formula that approximates the area under a curve using cubic polynomials.
 
-#### Simpsons 38 Code
+Steps:
+1.	Divide the interval [a,b] into n sub-intervals, where n must be a multiple of 3.
+2.	Calculate the step size:
+     h=(b−a)/n
+3.	Apply the formula:
+     o	Multiply function values at every third point by 2.
+     o	Multiply function values at other points by 3.
+4.	Sum up the results to get the approximate value of the integral.
+
+
+#### Simpsons 3/8 Code
 ```cpp
-// Add your Simpson's 3/8 Rule code here
+#include <iostream>
+#include <fstream>
+#include <cmath>
+
+using namespace std;
+
+double f(double x) {
+    return sin(x);
+}
+
+int main() {
+    ifstream fin("input2.txt");
+    ofstream fout("output2.txt");
+
+    double a, b;
+    int n;
+
+    fin >> a >> b >> n;
+
+    if (n % 3 != 0) {
+        fout << "Error: Number of intervals must be a multiple of 3." << endl;
+        return 0;
+    }
+
+    double h = (b - a) / n;
+    double sum = f(a) + f(b);
+
+    for (int i = 1; i < n; i++) {
+        double x = a + i * h;
+        if (i % 3 == 0)
+            sum += 2 * f(x);
+        else
+            sum += 3 * f(x);
+    }
+
+    double I = (3 * h / 8.0) * sum;
+
+    fout << "Value of integral : " << I << endl;
+
+    fin.close();
+    fout.close();
+
+    return 0;
+}
+
 ```
 
-#### Simpsons 38 Input
+#### Simpsons 3/8 Input
 ```
-Add your Simpson's 3/8 Rule input here
+0
+3.1416
+6
+
 ```
 
-#### Simpsons 38 Output
+#### Simpsons 3/8 Output
 ```
-Add your Simpson's 3/8 Rule output here
+Value of integral : 2.00201
+
 ```
 
 ---
