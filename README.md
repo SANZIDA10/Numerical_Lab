@@ -890,6 +890,7 @@ Add your Runge-Kutta output here
 ---
 
 ## Interpolation
+Interpolation is the process of estimating the value of a function at a point that lies between two known data points.It uses known values of a function to construct a new function (often a polynomial) that approximates the original function and allows us to compute missing values inside the data interval.
 
 ---
 
