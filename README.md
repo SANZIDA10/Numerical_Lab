@@ -1460,7 +1460,7 @@ Interpolated Value at x=2.5 is: 15.625
 
 #### Newtons Backward Theory
 
-Newton’s Backward Interpolation** is used to estimate the value of a function when the required value lies near the end of a set of equally spaced data points.
+Newton’s Backward Interpolation is used to estimate the value of a function when the required value lies near the end of a set of equally spaced data points.
 
 - Backward interpolation is used when the value of x lies near the end of the table.
 
