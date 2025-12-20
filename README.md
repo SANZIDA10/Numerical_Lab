@@ -1964,11 +1964,6 @@ int main() {
     cout<<"b = "<<b<<"\n";
     cout<<"Model: y = "<<a<<" * e^("<<b<<"x)\n\n";
 
-    cout<<"Calculated y values:\n";
-    for (int i= 0;i<n;i++) {
-        double y_calc=a*exp(b* x[i]);
-        cout<<"x = "<< x[i]<<", y = "<<y_calc<<"\n";
-    }
     return 0;
 }
 ```
@@ -1989,12 +1984,6 @@ a = 1.827779
 b = 0.401616
 Model: y = 1.827779 * e^(0.401616x)
 
-Calculated y values:
-x = 1, y = 2.731136
-x = 2, y = 4.080968
-x = 3, y = 6.097936
-x = 4, y = 9.111768
-x = 5, y = 13.615149
 ```
 
 ---
