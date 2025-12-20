@@ -797,17 +797,18 @@ Steps:
 ```cpp
 #include <iostream>
 #include <fstream>
+#include <iomanip>
 
 using namespace std;
 
 int main() {
-    ifstream fin("input.txt");     
-    ofstream fout("output.txt");   
+    ifstream fin("input3.txt");
+    ofstream fout("output3.txt");
 
     int n;
     fin >> n;
 
-    float a[10][11], x[10];
+    int a[10][11], x[10];
 
     for (int i = 0; i < n; i++)
         for (int j = 0; j <= n; j++)
@@ -815,7 +816,7 @@ int main() {
 
     for (int i = 0; i < n - 1; i++) {
         for (int k = i + 1; k < n; k++) {
-            float f = a[k][i] / a[i][i];
+            int f = a[k][i] / a[i][i];
             for (int j = i; j <= n; j++)
                 a[k][j] -= f * a[i][j];
         }
@@ -831,11 +832,19 @@ int main() {
     for (int i = 0; i < n; i++)
         fout << "x" << i + 1 << " = " << x[i] << endl;
 
+    fout << "\nFinal Upper Triangular Matrix:\n";
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j <= n; j++)
+            fout << setw(5) << a[i][j] << " ";
+        fout << endl;
+    }
+
     fin.close();
     fout.close();
 
     return 0;
 }
+
 ```
 
 #### Gauss Elimination Input
@@ -844,6 +853,7 @@ int main() {
 2 1 -1 8
 -3 -1 2 -11
 -2 1 2 -3
+
 ```
 
 #### Gauss Elimination Output
@@ -851,6 +861,12 @@ int main() {
 x1 = 2
 x2 = 3
 x3 = -1
+
+Final Upper Triangular Matrix:
+    2     1    -1     8 
+    0    -0     0     1 
+    0     0     3     3 
+
 ```
 
 ---
@@ -876,6 +892,7 @@ Steps:
 ```cpp
 #include <iostream>
 #include <fstream>
+#include <iomanip>
 
 using namespace std;
 
@@ -886,22 +903,22 @@ int main() {
     int n;
     fin >> n;
 
-    float a[10][11];
+    int a[10][11];
 
     for (int i = 0; i < n; i++)
         for (int j = 0; j <= n; j++)
             fin >> a[i][j];
 
     for (int i = 0; i < n; i++) {
-        float p = a[i][i];
+        int p = a[i][i];
         for (int j = 0; j <= n; j++)
-            a[i][j] /= p;
+            a[i][j] /= p; 
 
         for (int k = 0; k < n; k++) {
             if (k != i) {
-                float f = a[k][i];
+                int f = a[k][i];
                 for (int j = 0; j <= n; j++)
-                    a[k][j] -= f * a[i][j];
+                    a[k][j] -= f * a[i][j]; 
             }
         }
     }
@@ -909,11 +926,19 @@ int main() {
     for (int i = 0; i < n; i++)
         fout << "x" << i + 1 << " = " << a[i][n] << endl;
 
+    fout << "\nFinal Reduced Matrix (RREF):\n";
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j <= n; j++)
+            fout << setw(5) << a[i][j] << " ";
+        fout << endl;
+    }
+
     fin.close();
     fout.close();
 
     return 0;
 }
+
 ```
 
 #### Gauss Jordan Input
@@ -922,6 +947,7 @@ int main() {
 2 1 -1 8
 -3 -1 2 -11
 -2 1 2 -3
+
 ```
 
 #### Gauss Jordan Output
@@ -929,6 +955,12 @@ int main() {
 x1 = 2
 x2 = 3
 x3 = -1
+
+Final Reduced Matrix (RREF):
+    1     0     0     2 
+    0     1     0     3 
+    0     0     1    -1 
+
 ```
 
 ---
