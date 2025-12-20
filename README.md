@@ -1371,7 +1371,6 @@ Interpolation is the process of estimating the value of a function at a point th
 ### Newton's Forward Interpolation
 
 #### Newtons Forward Theory
-
 Newton's forward interpolation method is used to estimate values near the beginning of a table when data points (x is data point) are equally spaced.
 
 - Let x₀, x₁, x₂, … , xₙ₋₁, xₙ be a set of equally spaced values of the independent variable x.
@@ -1459,7 +1458,6 @@ Interpolated Value at x=2.5 is: 15.625
 ### Newton's Backward Interpolation
 
 #### Newtons Backward Theory
-
 Newton’s Backward Interpolation is used to estimate the value of a function when the required value lies near the end of a set of equally spaced data points.
 
 - Backward interpolation is used when the value of x lies near the end of the table.
@@ -1547,7 +1545,6 @@ Interpolated Value at x=4.5 is: 91.125
 ### Divided Difference Method
 
 #### Divided Difference Theory
-
 The Newton's Divided Difference Interpolation Method is used to estimate the value of a function when the given data points are not equally spaced.
 
 - The interpolation polynomial is given by:
@@ -1632,7 +1629,6 @@ Interpolated value: 9
 ### Newton's Forward Differentiation
 
 #### Newtons Forward Differentiation Theory
-
 It is used to find the first derivative of a function when the values of ( x ) are equally spaced and the derivative is required near the beginning of the data table.
 
 - Let, x₀, x₁, x₂, … , xₙ be equally spaced values with h = x₁ − x₀
@@ -1723,7 +1719,6 @@ First derivative at x=2 is: 12
 ### Newton's Backward Differentiation
 
 #### Newtons Backward Differentiation Theory
-
 The Numerical Backward Differentiation Method is a numerical technique used to approximate the derivative of a function when the value of the function is known at equally spaced points. This method is particularly useful when the required derivative is to be evaluated near the end of the given data set.
 
  -Let x₀, x₁, x₂, … , xₙ be equally spaced values with h = x₁ − x₀
@@ -1814,7 +1809,6 @@ Curve fitting is a method that is used to find a mathematical equation that best
 ### Curve Fitting: Linear Equation
 
 #### Linear Theory
-
 Linear regression is the process of finding a straight-line equation that best fits a given set of data points.
 
 Steps:
@@ -1905,7 +1899,6 @@ x = 5 , y = 5.8000
 ### Curve Fitting: Transcendental Equation
 
 #### Transcendental Theory
-
 Transcendental regression is used when the data follows an exponential relationship.
 
 Steps:
