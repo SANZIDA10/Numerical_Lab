@@ -284,7 +284,7 @@ Root = 0.00
 
 #### False Position Theory
 
-- Regular Falsi method in Latin
+False Position Method (Regula Falsi) is a numerical method used to find a root of a continuous function.
 
 - Linear interpolation method
 
@@ -304,93 +304,144 @@ X0 = x1 - f(x1) * (x2 – x1)/ (f(x2) - f(x1))
 #include <bits/stdc++.h>
 using namespace std;
 
-double f(double x){
-    return pow(x, 4) - 3*(pow(x, 3)) + 2*x*x + 6*x;
+int degree;
+vector<double> coeff;
+
+double f(double x) {
+  double res = 0;
+  for (int i = 0; i <= degree; i++) {
+    res += coeff[i] * pow(x, degree - i);
+  }
+  return res;
 }
 
-double falsePosition(double a, double b, double E, ofstream &out){
-    double c;
-    int count = 0;
+double falsePosition(double a, double b, double E, ofstream &out) {
+  double c;
+  int count = 0;
 
-    double fa = f(a);
-    double fb = f(b);
+  double fa = f(a);
+  double fb = f(b);
 
-    while(true){
-        c = a - fa * (b - a)/(fb - fa);
-        count++;
+  while (true) {
+    c = a - fa * (b - a) / (fb - fa);
+    count++;
 
-        if(fabs(f(c)) < E){
-            out << "iterations : " << count << "\n";
-            return c;
-        }
+    double fc = f(c);
 
-        double fc = f(c);
-        
-        if(fa * fc < 0){
-            b = c;
-            fb = fc;
-        }
-        else{
-            a = c;
-            fa = fc;
-        }
+    if (fabs(fc) < E) {
+      out << "Iterations : " << count << "\n";
+      return c;
     }
 
-    out << "iterations : " << count << "\n";
-    return c;
+    if (fa * fc < 0) {
+      b = c;
+      fb = fc;
+    } else {
+      a = c;
+      fa = fc;
+    }
+  }
 }
 
-int main(){
-    ifstream input("input.txt");
-    ofstream out("output.txt");
+int main() {
+  ifstream input("D:\\Numerical project\\Non-Linear Equation Methods\\False "
+                 "Position method\\input.txt");
+  ofstream out("D:\\Numerical project\\Non-Linear Equation Methods\\False "
+               "Position method\\output.txt");
 
-    double start, ends;
-    input >> start >> ends;
-
-    out << fixed << setprecision(6);
-    out << "The search interval is: " << start << " to " << ends << "\n\n";
-
-    double E = 1e-4;
-    double a = start, b;
-    double step = 0.1;
-
-    while(a < ends){
-        b = a + step;
-        if(b > ends) b = ends;
-
-        if(fabs(f(a)) < E){
-            out << "The root is at = " << a << "\n";
-        }
-
-        if(f(a) * f(b) < 0){
-            double root = falsePosition(a, b, E, out);
-            out << "The roots are in between " << a << " and " << b
-                << " the root is = " << root << "\n\n";
-        }
-
-        a = b;
-    }
-
-    input.close();
-    out.close();
+  if (!input) {
+    cout << "ERROR: input.txt not found!\n";
     return 0;
+  }
+
+  input >> degree;
+
+  coeff.resize(degree + 1);
+  for (int i = 0; i <= degree; i++) {
+    input >> coeff[i];
+  }
+
+  double start, ends;
+  input >> start >> ends;
+  input.close();
+
+  out << fixed << setprecision(6);
+
+  out << "Equation:\n";
+  for (int i = 0; i <= degree; i++) {
+    if (coeff[i] == 0)
+      continue;
+
+    if (i != 0 && coeff[i] > 0)
+      out << " + ";
+    if (coeff[i] < 0)
+      out << " - ";
+
+    out << fabs(coeff[i]);
+    int power = degree - i;
+    if (power > 0)
+      out << "x";
+    if (power > 1)
+      out << "^" << power;
+  }
+  out << "\n\n";
+
+  out << "False Position Method\n";
+  out << "The search interval is: " << start << " to " << ends << "\n\n";
+
+  double E = 1e-4;
+  double step = 0.1;
+
+  double a = start, b;
+  while (a < ends) {
+    b = a + step;
+    if (b > ends)
+      b = ends;
+
+    if (fabs(f(a)) < E) {
+      out << "Root found at x = " << a << "\n";
+    }
+
+    if (f(a) * f(b) < 0) {
+      out << "Root lies between [" << a << ", " << b << "]\n";
+      double root = falsePosition(a, b, E, out);
+      out << "Root = " << root << "\n\n";
+    }
+
+    a = b;
+  }
+
+  out.close();
+  return 0;
 }
+
 ```
 
 #### False Position Input
 ```
+4
+1 -3 2 6 0
 -2.24 2.24
+
 ```
 
 #### False Position Output
 ```
+Equation:
+1.000000x^4 - 3.000000x^3 + 2.000000x^2 + 6.000000x
+
+False Position Method
 The search interval is: -2.240000 to 2.240000
 
-iterations : 4
-The roots are in between -1.040000 and -0.940000 the root is = -0.999999
+Root lies between [-1.040000, -0.940000]
+Iterations : 4
+Root = -0.999999
 
-iterations : 2
-The roots are in between -0.040000 and 0.060000 the root is = -0.000014
+Root lies between [-0.040000, 0.060000]
+Iterations : 2
+Root = -0.000014
+
+
 ```
 
 ---
