@@ -1721,14 +1721,14 @@ First derivative at x=2 is: 12
 #### Newtons Backward Differentiation Theory
 The Numerical Backward Differentiation Method is a numerical technique used to approximate the derivative of a function when the value of the function is known at equally spaced points. This method is particularly useful when the required derivative is to be evaluated near the end of the given data set.
 
- -Let x₀, x₁, x₂, … , xₙ be equally spaced values with h = x₁ − x₀
- -Let v = (x − xₙ) / h measures how far the point x is from the ending value xₙ  in terms of step size.
--So, the first derivative formula for backward differentiation is:
+- Let x₀, x₁, x₂, … , xₙ be equally spaced values with h = x₁ − x₀
+- Let v = (x − xₙ) / h measures how far the point x is from the ending value xₙ  in terms of step size.
+- So, the first derivative formula for backward differentiation is:
 
        y' = (1/h) [ ∇yₙ + (2v + 1)/2! · ∇²yₙ + (3v² + 6v + 2)/3! · ∇³yₙ + (4v³ + 18v² + 22v 
        + 6)/4! · ∇⁴yₙ + … ]
 
--∇yₙ,∇²yₙ,∇³yₙ​,… are forward differences of the function values.
+- ∇yₙ,∇²yₙ,∇³yₙ​,… are forward differences of the function values.
 
 #### Newtons Backward Differentiation Code
 ```cpp
