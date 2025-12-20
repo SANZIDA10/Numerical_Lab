@@ -1782,7 +1782,29 @@ Curve fitting is a method that is used to find a mathematical equation that best
 
 #### Linear Theory
 
-[Add your Linear Curve Fitting theory here]
+Linear regression is the process of finding a straight-line equation that best fits a given set of data points.
+
+Steps:
+
+Collect data points:
+ - pairs of (xi,yi)
+
+Assume a linear model:
+ - The equation is:
+ y=a+bx
+
+Form the normal equations:
+ - Apply the least squares method to minimize the error:
+ ∑(yi−(a+bxi))^2
+ - This leads to two equations in a and b:
+ ∑y=na+b∑x
+ ∑xy=a∑x+b∑x^2
+
+Result:
+ - The straight line
+ y=a+bx
+ best approximates the given data.
+
 
 #### Linear Code
 ```cpp
@@ -1851,7 +1873,29 @@ x = 5 , y = 5.8000
 
 #### Transcendental Theory
 
-[Add your Transcendental Curve Fitting theory here]
+Transcendental regression is used when the data follows an exponential relationship.
+
+Steps:
+
+Collect data points:
+ - n pairs of (xi,yi).
+
+Assume an exponential model:
+ - The equation is: y=ae^bx
+ - 
+Transform the equation:
+ - Take natural logarithm on both sides:
+ ln⁡y=ln⁡a+bx
+ - Let Y=ln⁡yY and A=ln⁡a, so the equation becomes:
+ Y=A+bx
+
+Form the normal equations:
+ - Apply the least squares method to the transformed linear form :
+ ∑ Y = nA+b∑x
+∑ xY = A∑x+b∑x^2
+
+Result: Exponential function y= ae^bx
+
 
 #### Transcendental Code
 ```cpp
