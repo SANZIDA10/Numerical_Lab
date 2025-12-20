@@ -1273,28 +1273,33 @@ x3 = -1.33333
 
 ## Differential Equations
 
----
+A differential equation is an equation that involves an unknown function and one or more of its derivatives with respect to one or more independent variables.
+
+Example-
+dy/dx = 3x^2
 
 ### Runge-Kutta Method
 
 #### Runge-Kutta Theory
 
 The Runge-Kutta 4th Order Method (RK4) is a numerical technique to solve ordinary differential equations (ODEs) of the form:
+
     dy / dx = f(x , y) ,  y(x0) = y0
+    
 It is more accurate than simple methods because it estimates the slope at multiple points within a step.
 
 Steps:
 1. Start with initial values:
-   x = x0 ,   y = y0
+  - x = x0 ,   y = y0
    and choose a step size h.
 2. Calculate intermediate slopes:
-   k1 = h ⋅ f( x, y )
-   k2 = h ⋅ f( x + h / 2 , y + k1 / 2)
-   k3 = h ⋅ f( x + h / 2 , y + k2 / 2)
-   k4 = h ⋅ f( x + h , y + k3 ) 
+  - k1 = h ⋅ f( x, y )
+  - k2 = h ⋅ f( x + h / 2 , y + k1 / 2)
+  - k3 = h ⋅ f( x + h / 2 , y + k2 / 2)
+  - k4 = h ⋅ f( x + h , y + k3 ) 
 3. Update the solution:
-   y(next) = y + ( k1 + 2*k2 + 2*k3 + k4 ) / 6
-   x(next) = x + h 
+  - y(next) = y + ( k1 + 2*k2 + 2*k3 + k4 ) / 6
+  - x(next) = x + h 
 4. Repeat the process until reaching the desired value of x = xn .
 
 #### Runge-Kutta Code
