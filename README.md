@@ -550,83 +550,132 @@ using namespace std;
 const double E = 1e-6;
 const int max_it = 1000;
 
+int degree;
+vector<double> coeff;
+
 double f(double x) {
-    return 3*x - cos(x) - 1;
+  double res = 0;
+  for (int i = 0; i <= degree; i++) {
+    res += coeff[i] * pow(x, degree - i);
+  }
+  return res;
 }
 
 void secant(double x, double x1, double &r, ofstream &out) {
-    double fx = f(x);
-    double fx1 = f(x1);
+  double fx = f(x);
+  double fx1 = f(x1);
+  int counts = 0;
 
-    r = x1 - ((fx1 * (x1 - x)) / (fx1 - fx));
-    int counts = 0;
+  while (fabs(x1 - x) >= E && counts < max_it) {
+    fx = f(x);
+    fx1 = f(x1);
 
-    while (fabs(x1 - x) >= E && counts < max_it) {
-        counts++;
-        fx = f(x);
-        fx1 = f(x1);
-
-        r = x1 - ((fx1 * (x1 - x)) / (fx1 - fx));
-        x = x1;
-        x1 = r;
+    if (fx1 - fx == 0) {
+      out << "Division by zero encountered.\n";
+      return;
     }
 
-    if (counts >= max_it) {
-        out << "No real root is found in this interval.\n";
-        return;
-    }
+    r = x1 - (fx1 * (x1 - x)) / (fx1 - fx);
+    x = x1;
+    x1 = r;
+    counts++;
+  }
 
-    out << "The root " << r << " is found after " << counts << " iterations.\n";
+  if (counts >= max_it) {
+    out << "No real root found in this interval.\n";
+    return;
+  }
+
+  out << "The root = " << r << " found after " << counts << " iterations.\n";
 }
 
 int main() {
-    ifstream input("input.txt");
-    ofstream out("output.txt");
+  ifstream input("D:\\Numerical project\\Non-Linear Equation Methods\\secant "
+                 "method\\input.txt");
+  ofstream out("D:\\Numerical project\\Non-Linear Equation Methods\\secant "
+               "method\\output.txt");
 
-    if (!input) {
-        cout << "ERROR: input.txt not found!\n";
-        return 0;
-    }
-
-    double start, ends;
-    input >> start >> ends;
-    input.close();
-
-    double step = 0.5;
-    double a = start, b, r;
-
-    out << fixed << setprecision(6);
-    out << "Secant Method\n";
-    out << "Checking intervals for possible roots...\n";
-
-    while (a < ends) {
-        b = a + step;
-
-        if (f(a) * f(b) < 0) {
-            out << "\nInterval [" << a << ", " << b << "] seems to contain a root.\n";
-            secant(a, b, r, out);
-        }
-
-        a = b;
-    }
-
-    out.close();
+  if (!input) {
+    cout << "ERROR: input.txt not found!\n";
     return 0;
+  }
+
+  input >> degree;
+
+  coeff.resize(degree + 1);
+  for (int i = 0; i <= degree; i++) {
+    input >> coeff[i];
+  }
+
+  double start, ends;
+  input >> start >> ends;
+  input.close();
+
+  out << fixed << setprecision(6);
+
+  out << "Equation:\n";
+  for (int i = 0; i <= degree; i++) {
+    if (coeff[i] == 0)
+      continue;
+
+    if (i != 0 && coeff[i] > 0)
+      out << " + ";
+    if (coeff[i] < 0)
+      out << " - ";
+
+    out << fabs(coeff[i]);
+    int power = degree - i;
+    if (power > 0)
+      out << "x";
+    if (power > 1)
+      out << "^" << power;
+  }
+  out << "\n\n";
+
+  out << "Secant Method\n";
+  out << "Searching interval: [" << start << ", " << ends << "]\n";
+
+  double step = 0.5;
+  double a = start, b, r;
+
+  while (a < ends) {
+    b = a + step;
+    if (b > ends)
+      b = ends;
+
+    if (f(a) * f(b) < 0) {
+      out << "\nInterval [" << a << ", " << b << "] contains a root.\n";
+      secant(a, b, r, out);
+    }
+
+    a = b;
+  }
+
+  out.close();
+  return 0;
 }
+
 ```
 
 #### Secant Input
 ```
--2.23 2.23
+3
+3 0 -1 -1
+0 2
+
 ```
 
 #### Secant Output
 ```
-Secant Method
-Checking intervals for possible roots...
+Equation:
+3.000000x^3 - 1.000000x - 1.000000
 
-Interval [0.270000, 0.770000] seems to contain a root.
-The root 0.607102 is found after 4 iterations.
+Secant Method
+Searching interval: [0.000000, 2.000000]
+
+Interval [0.500000, 1.000000] contains a root.
+The root = 0.851383 found after 6 iterations.
+
 ```
 
 ---
