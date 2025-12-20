@@ -1276,6 +1276,7 @@ x3 = -1.33333
 A differential equation is an equation that involves an unknown function and one or more of its derivatives with respect to one or more independent variables.
 
 Example-
+
 dy/dx = 3x^2
 
 ### Runge-Kutta Method
