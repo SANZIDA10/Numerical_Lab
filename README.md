@@ -1882,7 +1882,7 @@ Collect data points:
 
 Assume an exponential model:
  - The equation is: y=ae^bx
- - 
+    
 Transform the equation:
  - Take natural logarithm on both sides:
  ln⁡y=ln⁡a+bx
