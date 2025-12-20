@@ -1603,17 +1603,32 @@ Interpolated value: 9
 
 #### Newtons Forward Differentiation Code
 ```cpp
-// Add your Newton's Forward Differentiation code here
+
+
 ```
 
 #### Newtons Forward Differentiation Input
 ```
-Add your Newton's Forward Differentiation input here
+5
+1 1
+2 8
+3 27
+4 64
+5 125
+2
+
 ```
 
 #### Newtons Forward Differentiation Output
 ```
-Add your Newton's Forward Differentiation output here
+Forward Difference Table:
+     1         1         7        12         6         0
+     2         8        19        18         6
+     3        27        37        24
+     4        64        61
+     5       125
+
+First derivative at x=2 is: 12
 ```
 
 ---
