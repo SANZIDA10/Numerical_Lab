@@ -1643,7 +1643,7 @@ Add your Newton's Backward Differentiation output here
 
 ## Curve Fitting
 
----
+Curve fitting is a method that is used to find a mathematical equation that best approximates a set of given data points. The equation is chosen so that the error between the actual data and the fitted curve is minimized. It usually uses the least squares method.
 
 ### Curve Fitting: Linear Equation
 
@@ -1794,7 +1794,7 @@ x = 5, y = 13.615149
 
 #### Polynomial Theory
 
-Curve fitting is the process of finding a mathematical function that best approximates a set of data points. In polynomial curve fitting, we fit a polynomial of degree m to n data points (xi, yi).
+A polynomial equation is an equation formed by variables and coefficients, where the highest power of the variable is a non-negative integer. In polynomial curve fitting, we fit a polynomial of degree m to n data points (xi, yi).
 
 Steps:
 1. Collect data points:
