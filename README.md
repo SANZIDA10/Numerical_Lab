@@ -1896,13 +1896,13 @@ y = 0.3714 + 1.3143x^1 + 0.0857x^2
 
 ## Numerical Integration
 
----
+Numerical integration is a method used to approximate the value of a definite integral when the exact integration is difficult or impossible to find analytically. It estimates the area under a curve using numerical techniques.
 
 ### Simpson's 1/3 Rule
 
-#### Simpsons 13 Theory
+#### Simpsons 1/3 Theory
 
-Simpson's 1/3 Rule is a numerical method used to approximate the definite integral of a function when the exact integration is difficult. It approximates the area under a curve using parabolic (quadratic) segments.
+Simpson’s 1/3 Rule is used to approximate definite integrals by dividing the interval into an even number of parts. It approximates the area under a curve using parabolic (quadratic) segments.
 
 Steps:
 1. Divide the interval [a,b] into n sub-intervals, where n must be even.
@@ -1912,7 +1912,7 @@ Steps:
    - Multiply odd-indexed points by 4 and even-indexed points by 2.
 4. Sum up the results to get the approximate value of the integral.
 
-#### Simpsons 13 Code
+#### Simpsons 1/3 Code
 ```cpp
 #include <iostream>
 #include <fstream>
@@ -1960,14 +1960,14 @@ int main() {
 }
 ```
 
-#### Simpsons 13 Input
+#### Simpsons 1/3 Input
 ```
 0
 3.1416
 6
 ```
 
-#### Simpsons 13 Output
+#### Simpsons 1/3 Output
 ```
 Value of integral : 2.00086
 ```
@@ -1976,9 +1976,9 @@ Value of integral : 2.00086
 
 ### Simpson's 3/8 Rule
 
-#### Simpsons 38 Theory
+#### Simpsons 3/8 Theory
 
-Simpson's 3/8 Rule is a numerical method used to approximate the definite integral of a function when finding the exact integral is difficult. It is a type of formula that approximates the area under a curve using cubic polynomials.
+Simpson’s 3/8 Rule is used to approximate definite integrals by dividing the interval into parts that are a multiple of three. It is a type of formula that approximates the area under a curve using cubic polynomials.
 
 Steps:
 1. Divide the interval [a,b] into n sub-intervals, where n must be a multiple of 3.
@@ -1989,7 +1989,7 @@ Steps:
    - Multiply function values at other points by 3.
 4. Sum up the results to get the approximate value of the integral.
 
-#### Simpsons 38 Code
+#### Simpsons 3/8 Code
 ```cpp
 #include <iostream>
 #include <fstream>
@@ -2037,14 +2037,14 @@ int main() {
 }
 ```
 
-#### Simpsons 38 Input
+#### Simpsons 3/8 Input
 ```
 0
 3.1416
 6
 ```
 
-#### Simpsons 38 Output
+#### Simpsons 3/8 Output
 ```
 Value of integral : 2.00201
 ```
