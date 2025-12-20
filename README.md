@@ -449,6 +449,7 @@ Root = -0.000014
 ### Newton-Raphson Method
 
 #### Newton-Raphson Theory
+Newton–Raphson Method is a numerical method used to find a root of a real-valued function. It starts with an initial guess and repeatedly improves it using the function and its derivative.
 
 - If f(x) is a real and continuously differentiable function, the Newton–Raphson method is used to find a root of the equation f(x) = 0.
 
@@ -470,113 +471,148 @@ using namespace std;
 const double E = 1e-6;
 const int max_it = 1000;
 
+int degree;
+vector<double> coeff;
 
-double f(double x){
-    
-    return x*x*x - x;
+double f(double x) {
+  double res = 0;
+  for (int i = 0; i <= degree; i++) {
+    res += coeff[i] * pow(x, degree - i);
+  }
+  return res;
 }
 
-double diff(double x){
-    return 3*x*x - 1;
+double diff(double x) {
+  double res = 0;
+  for (int i = 0; i < degree; i++) {
+    res += coeff[i] * (degree - i) * pow(x, degree - i - 1);
+  }
+  return res;
 }
-
 
 void newton(double x, double &r, ofstream &out) {
+  int counts = 0;
+
+  while (counts < max_it) {
     double fx = f(x);
-    double f_px = diff(x);
+    double fpx = diff(x);
 
-    if (f_px == 0) { 
-        x = x + 0.5;
-        f_px = diff(x);
+    if (fabs(fpx) < 1e-12) {
+      x += 0.5;
+      continue;
     }
 
-    r = x - (fx / f_px);
-    int counts = 0;
+    r = x - fx / fpx;
 
-    while (fabs(r - x) >= E && counts < max_it) {
-        x = r;
-        counts++;
-        fx = f(x);
-        f_px = diff(x);
-
-        if (f_px == 0) {
-            x = x + 0.5;
-            f_px = diff(x);
-        }
-
-        r = x - (fx / f_px);
+    if (fabs(r - x) < E) {
+      out << "The root = " << r << " found after " << counts
+          << " iterations.\n\n";
+      return;
     }
 
-    if (counts >= max_it) {
-        out << "No real root is found starting from " << x << ".\n";
-        return;
-    }
+    x = r;
+    counts++;
+  }
 
-    out << "The root " << r << " is found after " << counts << " iterations.\n\n";
+  out << "No real root found starting from this initial guess.\n\n";
 }
 
 int main() {
-    ifstream input("input.txt");
-    ofstream out("output.txt");
+  ifstream input("D:\\Numerical project\\Non-Linear Equation Methods\\Newton "
+                 "Raphson method\\input.txt");
+  ofstream out("D:\\Numerical project\\Non-Linear Equation Methods\\Newton "
+               "Raphson method\\output.txt");
 
-    if(!input){
-        cout << "Error: input.txt not found!\n";
-        return 0;
-    }
-
-    double start, ends;
-    input >> start >> ends;
-    input.close();
-
-    out << fixed << setprecision(6);
-    out << "Newton-Raphson Method\n";
-    out << "Search interval: " << start << " to " << ends << "\n\n";
-
-    double step = 0.5;
-    double a = start, b, r;
-    bool found = false;
-
-    while(a < ends){
-        b = a + step;
-        if(b > ends) b = ends;
-
-        if(f(a) * f(b) < 0){
-            out << "Interval [" << a << ", " << b << "] seems to contain a root.\n";
-            newton(a, r, out);
-            found = true;
-        }
-
-        a = b;
-    }
-
-    if(!found){
-        out << "No sign change detected automatically.\n";
-        out << "Please enter a guessed value of x in the input file for manual root search.\n";
-    }
-
-    out.close();
+  if (!input) {
+    cout << "Error: input.txt not found!\n";
     return 0;
+  }
+
+  input >> degree;
+
+  coeff.resize(degree + 1);
+  for (int i = 0; i <= degree; i++) {
+    input >> coeff[i];
+  }
+
+  double start, ends;
+  input >> start >> ends;
+  input.close();
+
+  out << fixed << setprecision(6);
+
+  out << "Equation:\n";
+  for (int i = 0; i <= degree; i++) {
+    if (coeff[i] == 0)
+      continue;
+
+    if (i != 0 && coeff[i] > 0)
+      out << " + ";
+    if (coeff[i] < 0)
+      out << " - ";
+
+    out << fabs(coeff[i]);
+    int power = degree - i;
+    if (power > 0)
+      out << "x";
+    if (power > 1)
+      out << "^" << power;
+  }
+  out << "\n\n";
+
+  out << "Newton-Raphson Method\n";
+  out << "Search interval: " << start << " to " << ends << "\n\n";
+
+  double step = 0.5;
+  double a = start, b, r;
+  bool found = false;
+
+  while (a < ends) {
+    b = a + step;
+    if (b > ends)
+      b = ends;
+
+    if (f(a) * f(b) < 0) {
+      out << "Interval [" << a << ", " << b << "] contains a root.\n";
+      newton(a, r, out);
+      found = true;
+    }
+
+    a = b;
+  }
+
+  out.close();
+  return 0;
 }
+
 ```
 
 #### Newton-Raphson Input
 ```
+3
+1 0 -1 0
 -2.23 2.23
+
 ```
 
 #### Newton-Raphson Output
 ```
+Equation:
+1.000000x^3 - 1.000000x
+
 Newton-Raphson Method
 Search interval: -2.230000 to 2.230000
 
-Interval [-1.230000, -0.730000] seems to contain a root.
-The root -1.000000 is found after 4 iterations.
+Interval [-1.230000, -0.730000] contains a root.
+The root = -1.000000 found after 4 iterations.
 
-Interval [-0.230000, 0.270000] seems to contain a root.
-The root 0.000000 is found after 3 iterations.
+Interval [-0.230000, 0.270000] contains a root.
+The root = 0.000000 found after 3 iterations.
 
-Interval [0.770000, 1.270000] seems to contain a root.
-The root 1.000000 is found after 5 iterations.
+Interval [0.770000, 1.270000] contains a root.
+The root = 1.000000 found after 5 iterations.
+
+
 ```
 
 ---
@@ -900,6 +936,9 @@ x3 = -1
 ### LU Decomposition Method
 
 #### LU Decomposition Theory
+LU Decomposition Method is a matrix factorization technique in which a square matrix A is expressed as the product of a lower triangular matrix L and an upper triangular matrix U, such that
+                A=LU.
+It is mainly used to solve systems of linear equations efficiently by first decomposing the matrix and then applying forward and backward substitution.
 
 To factor any square matrix into two triangular matrices, i.e., one is a lower triangular matrix and the other is an upper triangular matrix, we can use the following steps.
 
@@ -1036,6 +1075,9 @@ Solution Vector X:
 ### Matrix Inversion Method
 
 #### Matrix Inversion Theory
+Matrix Inversion is the process of finding a matrix A^-1 for a given square matrix A such that
+                  AA^-1 = A^-1A= 1
+where I is the identity matrix. The inverse exists only if the matrix is non-singular (has a non-zero determinant).
 
 AX = B
 
