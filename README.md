@@ -1362,15 +1362,15 @@ Total iterations = 2
 
 ---
 
-## Interpolation
+## Interpolation 
 
 Interpolation is the process of estimating the value of a function at a point that lies between two known data points. It uses known values of a function to construct a new function (often a polynomial) that approximates the original function and allows us to compute missing values inside the data interval.
 
 ---
 
-### Newton's Forward Interpolation
+### Newton's Forward Interpolation 
 
-#### Newtons Forward Theory
+#### Newtons Forward interpolation Theory
 Newton's forward interpolation method is used to estimate values near the beginning of a table when data points (x is data point) are equally spaced.
 
 - Let x₀, x₁, x₂, … , xₙ₋₁, xₙ be a set of equally spaced values of the independent variable x.
@@ -1457,7 +1457,7 @@ Interpolated Value at x=2.5 is: 15.625
 
 ### Newton's Backward Interpolation
 
-#### Newtons Backward Theory
+#### Newtons Backward interpolation Theory
 Newton’s Backward Interpolation is used to estimate the value of a function when the required value lies near the end of a set of equally spaced data points.
 
 - Backward interpolation is used when the value of x lies near the end of the table.
