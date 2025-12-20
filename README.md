@@ -1599,10 +1599,63 @@ Interpolated value: 9
 
 #### Newtons Forward Differentiation Theory
 
-[Add your Newton's Forward Differentiation theory here]
+It is used to find the first derivative of a function when the values of ( x ) are equally spaced and the derivative is required near the beginning of the data table.
+
+-Let, x₀, x₁, x₂, … , xₙ be equally spaced values with h = x₁ − x₀
+
+-Let, u = (x − x₀) / h measures how far the point x is from the starting value x₀​ in terms of step size.
+
+-So, the first derivative formula for forward differentiation is:
+
+          y’ = (1/h) [ Δy₀ + (2u − 1)/2! · Δ²y₀ + (3u² − 6u + 2)/3! · Δ³y₀ + (4u³ − 18u² +   
+          22u - 6)/4! · Δ⁴y₀ + … ]
+          
+-Δy₀,Δ²y₀,Δ³y₀​,… are forward differences of the function values.
+
 
 #### Newtons Forward Differentiation Code
 ```cpp
+#include <iostream>
+#include <iomanip>
+using namespace std;
+
+double facto(int n){
+    double f=1;
+    for(int i=2;i<=n;i++)f*=i;
+    return f;
+}
+
+int main(){
+    int n;
+    cin>>n;
+    double x[50],y[50][50],X;
+
+    for(int i=0;i<n;i++)cin>>x[i]>>y[i][0];
+    cin>>X;
+
+    for(int j=1;j<n;j++)
+        for(int i=0;i<n-j;i++)
+            y[i][j]=y[i+1][j-1]-y[i][j-1];
+
+    cout<<"Forward Difference Table:\n";
+    for(int i=0;i<n;i++){
+        cout<<setw(6)<<x[i];
+        for(int j=0;j<n-i;j++)
+            cout<<setw(10)<<y[i][j];
+        cout<<endl;
+    }
+
+    double h=x[1]-x[0];
+    double u=(X-x[0])/h;
+
+    double dydx=y[0][1]+(2*u-1)*y[0][2]/2 +(3*u*u-6*u+2)*y[0][3]/6;
+
+    dydx/=h;
+
+    cout<<"\nFirst derivative at x="<<X<<" is: "<<dydx<<endl;
+    return 0;
+}
+
 
 
 ```
@@ -1637,7 +1690,17 @@ First derivative at x=2 is: 12
 
 #### Newtons Backward Differentiation Theory
 
-[Add your Newton's Backward Differentiation theory here]
+
+The Numerical Backward Differentiation Method is a numerical technique used to approximate the derivative of a function when the value of the function is known at equally spaced points. This method is particularly useful when the required derivative is to be evaluated near the end of the given data set.
+
+ -Let x₀, x₁, x₂, … , xₙ be equally spaced values with h = x₁ − x₀
+ -Let v = (x − xₙ) / h measures how far the point x is from the ending value xₙ  in terms of step size.
+-So, the first derivative formula for backward differentiation is:
+
+       y' = (1/h) [ ∇yₙ + (2v + 1)/2! · ∇²yₙ + (3v² + 6v + 2)/3! · ∇³yₙ + (4v³ + 18v² + 22v 
+       + 6)/4! · ∇⁴yₙ + … ]
+
+-∇yₙ,∇²yₙ,∇³yₙ​,… are forward differences of the function values.
 
 #### Newtons Backward Differentiation Code
 ```cpp
