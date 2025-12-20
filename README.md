@@ -1704,17 +1704,72 @@ The Numerical Backward Differentiation Method is a numerical technique used to a
 
 #### Newtons Backward Differentiation Code
 ```cpp
-// Add your Newton's Backward Differentiation code here
+#include <iostream>
+#include <iomanip>
+using namespace std;
+
+double facto(int n){
+    double f=1;
+    for(int i=2;i<=n;i++)f*=i;
+    return f;
+}
+
+int main(){
+    int n;cin>>n;
+    double x[50],y[50][50],X;
+
+    for(int i=0;i<n;i++)cin>>x[i]>>y[i][0];
+    cin>>X;
+
+    for(int j=1;j<n;j++)
+        for(int i=n-1;i>=j;i--)
+            y[i][j]=y[i][j-1]-y[i-1][j-1];
+
+    cout<<"Backward Difference Table:\n";
+    for(int i=0;i<n;i++){
+        cout<<setw(6)<<x[i];
+        for(int j=0;j<=i;j++)
+            cout<<setw(10)<<y[i][j];
+        cout<<endl;
+    }
+
+    double h=x[1]-x[0];
+    double u=(X-x[n-1])/h;
+
+    double dydx=y[n-1][1]
+               +(2*u+1)*y[n-1][2]/2
+               +(3*u*u+6*u+2)*y[n-1][3]/6;
+
+    dydx/=h;
+
+    cout<<"\nFirst derivative at x="<<X<<" is : "<<dydx<<endl;
+    return 0;
+}
+
 ```
 
 #### Newtons Backward Differentiation Input
 ```
-Add your Newton's Backward Differentiation input here
+5
+1 1
+2 8
+3 27
+4 64
+5 125
+4
 ```
 
 #### Newtons Backward Differentiation Output
 ```
-Add your Newton's Backward Differentiation output here
+Backward Difference Table:
+     1         1
+     2         8         7
+     3        27        19        12
+     4        64        37        18         6
+     5       125        61        24         6         0
+
+First derivative at x=4 is : 48
+
 ```
 
 ---
