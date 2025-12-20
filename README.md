@@ -1372,7 +1372,7 @@ Interpolation is the process of estimating the value of a function at a point th
 
 #### Newtons Forward Theory
 
-- Newton's forward interpolation method is used to estimate values near the beginning of a table when data points (x is data point) are equally spaced.
+Newton's forward interpolation method is used to estimate values near the beginning of a table when data points (x is data point) are equally spaced.
 
 - Let x₀, x₁, x₂, … , xₙ₋₁, xₙ be a set of equally spaced values of the independent variable x.
 
@@ -1460,6 +1460,8 @@ Interpolated Value at x=2.5 is: 15.625
 
 #### Newtons Backward Theory
 
+Newton’s Backward Interpolation** is used to estimate the value of a function when the required value lies near the end of a set of equally spaced data points.
+
 - Backward interpolation is used when the value of x lies near the end of the table.
 
 - Let x₀, x₁, x₂, … , xₙ₋₁, xₙ be a set of equally spaced values of the independent variable x.
@@ -1546,7 +1548,7 @@ Interpolated Value at x=4.5 is: 91.125
 
 #### Divided Difference Theory
 
-- The Newton's Divided Difference Interpolation Method is used to estimate the value of a function when the given data points are not equally spaced.
+The Newton's Divided Difference Interpolation Method is used to estimate the value of a function when the given data points are not equally spaced.
 
 - The interpolation polynomial is given by:
 
@@ -1633,16 +1635,16 @@ Interpolated value: 9
 
 It is used to find the first derivative of a function when the values of ( x ) are equally spaced and the derivative is required near the beginning of the data table.
 
--Let, x₀, x₁, x₂, … , xₙ be equally spaced values with h = x₁ − x₀
+- Let, x₀, x₁, x₂, … , xₙ be equally spaced values with h = x₁ − x₀
 
--Let, u = (x − x₀) / h measures how far the point x is from the starting value x₀​ in terms of step size.
+- Let, u = (x − x₀) / h measures how far the point x is from the starting value x₀​ in terms of step size.
 
--So, the first derivative formula for forward differentiation is:
+- So, the first derivative formula for forward differentiation is:
 
           y’ = (1/h) [ Δy₀ + (2u − 1)/2! · Δ²y₀ + (3u² − 6u + 2)/3! · Δ³y₀ + (4u³ − 18u² +   
           22u - 6)/4! · Δ⁴y₀ + … ]
           
--Δy₀,Δ²y₀,Δ³y₀​,… are forward differences of the function values.
+- Δy₀,Δ²y₀,Δ³y₀​,… are forward differences of the function values.
 
 
 #### Newtons Forward Differentiation Code
@@ -1721,7 +1723,6 @@ First derivative at x=2 is: 12
 ### Newton's Backward Differentiation
 
 #### Newtons Backward Differentiation Theory
-
 
 The Numerical Backward Differentiation Method is a numerical technique used to approximate the derivative of a function when the value of the function is known at equally spaced points. This method is particularly useful when the required derivative is to be evaluated near the end of the given data set.
 
