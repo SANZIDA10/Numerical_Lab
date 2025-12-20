@@ -1371,11 +1371,11 @@ Interpolation is the process of estimating the value of a function at a point th
 ### Newton's Forward Interpolation 
 
 #### Newtons Forward interpolation Theory
-Newton's forward interpolation method is used to estimate values near the beginning of a table when data points (x is data point) are equally spaced.
+Newton's forward interpolation method is used to estimate values near the beginning of a table when data points (x is the data point) are equally spaced.
 
-- Let x₀, x₁, x₂, … , xₙ₋₁, xₙ be a set of equally spaced values of the independent variable x.
+- Let x₀, x₁, x₂, ... , xₙ₋₁, xₙ be a set of equally spaced values of the independent variable x.
 
-- So x₁ − x₀ = x₂ − x₁ = x₃ − x₂ = … = xₙ − xₙ₋₁ = h
+- So x₁ − x₀ = x₂ − x₁ = x₃ − x₂ = ... = xₙ − xₙ₋₁ = h
 
 - Let, u = (x − x₀) / h
 
@@ -1462,14 +1462,14 @@ Newton’s Backward Interpolation is used to estimate the value of a function wh
 
 - Backward interpolation is used when the value of x lies near the end of the table.
 
-- Let x₀, x₁, x₂, … , xₙ₋₁, xₙ be a set of equally spaced values of the independent variable x.
+- Let x₀, x₁, x₂, ... , xₙ₋₁, xₙ be a set of equally spaced values of the independent variable x.
 
-- The interval between successive values is constant, i.e., x₁ − x₀ = x₂ − x₁ = x₃ − x₂ = … = xₙ − xₙ₋₁ = h
+- The interval between successive values is constant, i.e., x₁ − x₀ = x₂ − x₁ = x₃ − x₂ = ... = xₙ − xₙ₋₁ = h
 
 - Let, u = (x − xₙ) / h
 
 - The Newton's backward difference interpolation formula for equal intervals is:
-  y = yₙ + u∇yₙ+ [u(u + 1) / 2!] ∇²yₙ+ [u(u + 1)(u + 2) / 3!] ∇³yₙ+ … + [u(u + 1)(u + 2)…(u + n − 1) / n!] ∇ⁿyₙ
+  y = yₙ + u∇yₙ+ [u(u + 1) / 2!] ∇²yₙ+ [u(u + 1)(u + 2) / 3!] ∇³yₙ+ ... + [u(u + 1)(u + 2)…(u + n − 1) / n!] ∇ⁿyₙ
 
 #### Newtons Backward Code
 ```cpp
@@ -1835,7 +1835,7 @@ Result:
 
 #### Linear Code
 ```cpp
-#include <bits/stdc++.h>
+#include <bits/stdc++.h>//y=a+bx;
 using namespace std;
 
 int main() {
@@ -1861,17 +1861,11 @@ int main() {
     cout<<fixed<<setprecision(4);
     cout<<"a(intercept) = "<<a<<"\n";
     cout<<"b(slope) = "<<b<<"\n\n";
-
-    cout<<"Predicted y values:\n";
-    for(int i =0; i<n; i++) {
-        double y_calc=a+b*x[i];
-        cout<<"x = "<<x[i]<<", y = "<<y_calc<<"\n";
-    }
     return 0;
 }
 ```
 
-#### Linear Input
+#### Linear Input  
 ```
 5
 1 2
@@ -1881,17 +1875,11 @@ int main() {
 5 6
 ```
 
-#### Linear Output
+#### Linear Output  
 ```
 a (intercept) = 1.3000
 b (slope) = 0.9000
 
-Predicted y values:
-x = 1 , y = 2.2000
-x = 2 , y = 3.1000
-x = 3 , y = 4.0000
-x = 4 , y = 4.9000
-x = 5 , y = 5.8000
 ```
 
 ---
