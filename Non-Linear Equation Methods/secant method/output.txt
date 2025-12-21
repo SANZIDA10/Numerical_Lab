@@ -1,0 +1,8 @@
+Equation:
+3.000000x^3 - 1.000000x - 1.000000
+
+Secant Method
+Searching interval: [0.000000, 2.000000]
+
+Interval [0.500000, 1.000000] contains a root.
+The root = 0.851383 found after 6 iterations.

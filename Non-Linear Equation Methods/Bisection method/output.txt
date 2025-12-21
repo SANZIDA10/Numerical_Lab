@@ -1,0 +1,15 @@
+The equation is:
+1.00x^4 - 3.00x^3 + 2.00x^2 + 6.00x
+
+The search interval is: -5.00 to 5.00
+
+The root is at x = -1.00
+Iterations : 14
+Root lies between -1.00 and -0.90
+Root = -1.00
+
+The root is at x = -0.00
+Iterations : 13
+Root lies between -0.00 and 0.10
+Root = 0.00
+
