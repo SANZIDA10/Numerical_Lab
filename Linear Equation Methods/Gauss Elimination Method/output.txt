@@ -1,4 +1,8 @@
-Solution:
-x1 = 2.00
-x2 = 3.00
-x3 = -1.00
+x1 = 2
+x2 = 3
+x3 = -1
+
+Final Upper Triangular Matrix:
+    2     1    -1     8 
+    0    -0     0     1 
+    0     0     3     3 
