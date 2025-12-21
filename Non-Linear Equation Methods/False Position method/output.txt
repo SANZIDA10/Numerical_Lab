@@ -1,0 +1,14 @@
+Equation:
+1.000000x^4 - 3.000000x^3 + 2.000000x^2 + 6.000000x
+
+False Position Method
+The search interval is: -2.240000 to 2.240000
+
+Root lies between [-1.040000, -0.940000]
+Iterations : 4
+Root = -0.999999
+
+Root lies between [-0.040000, 0.060000]
+Iterations : 2
+Root = -0.000014
+
