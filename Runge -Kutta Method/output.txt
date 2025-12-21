@@ -1,0 +1,2 @@
+Value of y at x = 0.20000 is: 1.27356
+Total iterations = 2
