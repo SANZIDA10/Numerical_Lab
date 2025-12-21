@@ -70,10 +70,16 @@ A comprehensive collection of numerical methods implementations in C++ for solvi
     - [Input](#divided-difference-input)
     - [Output](#divided-difference-output)
 - [Numerical Differentiation](#numerical-differentiation)
-  - [Theory](#numerical-differentiation-theory)
-  - [Code](#numerical-differentiation-code)
-  - [Input](#numerical-differentiation-input)
-  - [Output](#numerical-differentiation-output)
+  - [Newton's Forward Differentiation](#newtons-forward-differentiation)
+    - [Theory](#newtons-forward-differentiation-theory)
+    - [Code](#newtons-forward-differentiation-code)
+    - [Input](#newtons-forward-differentiation-input)
+    - [Output](#newtons-forward-differentiation-output)
+  - [Newton's Backward Differentiation](#newtons-backward-differentiation)
+    - [Theory](#newtons-backward-differentiation-theory)
+    - [Code](#newtons-backward-differentiation-code)
+    - [Input](#newtons-backward-differentiation-input)
+    - [Output](#newtons-backward-differentiation-output)
 - [Curve Fitting](#curve-fitting)
   - [Linear Equation](#curve-fitting-linear)
     - [Theory](#linear-theory)
@@ -118,6 +124,7 @@ A non-linear equation is one in which the power of the variable is greater than 
 ### Bisection Method
 
 #### Bisection Theory
+Bisection Method is a numerical method used to find a root of a continuous function. It works by repeatedly dividing an interval [a,b][a, b][a,b] into two halves where the function values at the ends have opposite signs (f(a)⋅f(b)<0)(f(a)\cdot f(b) < 0)(f(a)⋅f(b)<0), and then selecting the half in which the root lies. This process continues until the root is found with the desired accuracy.
 
 - Binary chopping or half-interval method
 
@@ -137,93 +144,138 @@ X0 =(x1 + x2)/2
 #include <bits/stdc++.h>
 using namespace std;
 
-double f(double x){
-    return pow(x, 4) - 3*(pow(x, 3)) + 2*x*x + 6*x;
+int degree;
+vector<double> coeff;
+
+double f(double x) {
+  double res = 0;
+  for (int i = 0; i <= degree; i++) {
+    res += coeff[i] * pow(x, degree - i);
+  }
+  return res;
 }
 
-double bisection(double a, double b, double E, ofstream &out){
-    double mid;
-    int count = 0;
+double bisection(double a, double b, double E, ofstream &out) {
+  double mid;
+  int count = 0;
 
-    double fa = f(a);
-    double fb = f(b);
+  double fa = f(a);
 
-    while(true){
-        mid = (a + b)/2;
-        count++;
-        
-        double fmid = f(mid);
+  while (true) {
+    mid = (a + b) / 2.0;
+    count++;
 
-        if(fabs(fmid) < E){
-            out << "iterations : " << count << "\n";
-            return mid;
-        }
+    double fmid = f(mid);
 
-        if(fa * fmid < 0){
-            b = mid;
-            fb = fmid;
-        }
-        else{
-            a = mid;
-            fa = fmid;  
-        }
+    if (fabs(fmid) < E) {
+      out << "Iterations : " << count << "\n";
+      return mid;
     }
 
-    out << "iterations : " << count << "\n";
-    return mid;
+    if (fa * fmid < 0) {
+      b = mid;
+    } else {
+      a = mid;
+      fa = fmid;
+    }
+  }
 }
 
-int main(){
-    ifstream input("input.txt");
-    ofstream out("output.txt");
+int main() {
+  ifstream input("D:\\Numerical project\\Non-Linear Equation "
+                 "Methods\\Bisection method\\input.txt");
+  ofstream out("D:\\Numerical project\\Non-Linear Equation Methods\\Bisection "
+               "method\\output.txt");
 
-    double start, ends;
-    input >> start >> ends;
+  input >> degree;
 
-    out << fixed << setprecision(6);
-    out << "The search interval is: " << start << " to " << ends << "\n\n";
+  coeff.resize(degree + 1);
+  for (int i = 0; i <= degree; i++) {
+    input >> coeff[i];
+  }
 
-    double E = 1e-4;
-    double a = start, b;
-    double step = 0.1;  
+  double start, ends;
+  input >> start >> ends;
 
-    while(a < ends){
-        b = a + step;
-        if(b > ends) b = ends;
+  out << fixed << setprecision(6);
 
-        if(fabs(f(a)) < E){
-            out << "The root is at = " << a << "\n";
-        }
+  out << "The equation is:\n";
+  for (int i = 0; i <= degree; i++) {
+    if (coeff[i] == 0)
+      continue;
 
-        if(f(a) * f(b) < 0){
-            double root = bisection(a, b, E, out);
-            out << "The roots are in between " << a << " and " << b
-                << " the root is = " << root << "\n\n";
-        }
+    if (i != 0 && coeff[i] > 0)
+      out << " + ";
+    if (coeff[i] < 0)
+      out << " - ";
 
-        a = b;
+    out << fabs(coeff[i]);
+    int power = degree - i;
+    if (power > 0)
+      out << "x";
+    if (power > 1)
+      out << "^" << power;
+  }
+  out << "\n\n";
+
+  out << "The search interval is: " << start << " to " << ends << "\n\n";
+
+  double E = 1e-4;
+  double step = 0.1;
+
+  double a = start;
+  while (a < ends) {
+    double b = a + step;
+    if (b > ends)
+      b = ends;
+
+    if (fabs(f(a)) < E) {
+      out << "The root is at x = " << a << "\n";
     }
 
-    input.close();
-    out.close();
-    return 0;
+    if (f(a) * f(b) < 0) {
+      double root = bisection(a, b, E, out);
+      out << "Root lies between " << a << " and " << b << "\nRoot = " << root
+          << "\n\n";
+    }
+
+    a = b;
+  }
+
+  input.close();
+  out.close();
+  return 0;
 }
+
 ```
 
 #### Bisection Input
 ```
--2.24  2.24
+4
+1 -3 2 6 0
+-5 5
+
+
 ```
 
 #### Bisection Output
 ```
-The search interval is: -2.240000 to 2.240000
+The equation is:
+1.00x^4 - 3.00x^3 + 2.00x^2 + 6.00x
 
-iterations : 13
-The roots are in between -1.040000 and -0.940000 the root is = -0.999998
+The search interval is: -5.00 to 5.00
 
-iterations : 11
-The roots are in between -0.040000 and 0.060000 the root is = -0.000010
+The root is at x = -1.00
+Iterations : 14
+Root lies between -1.00 and -0.90
+Root = -1.00
+
+The root is at x = -0.00
+Iterations : 13
+Root lies between -0.00 and 0.10
+Root = 0.00
+
+
 ```
 
 ---
@@ -232,7 +284,7 @@ The roots are in between -0.040000 and 0.060000 the root is = -0.000010
 
 #### False Position Theory
 
-- Regular Falsi method in Latin
+False Position Method (Regula Falsi) is a numerical method used to find a root of a continuous function.
 
 - Linear interpolation method
 
@@ -252,93 +304,144 @@ X0 = x1 - f(x1) * (x2 – x1)/ (f(x2) - f(x1))
 #include <bits/stdc++.h>
 using namespace std;
 
-double f(double x){
-    return pow(x, 4) - 3*(pow(x, 3)) + 2*x*x + 6*x;
+int degree;
+vector<double> coeff;
+
+double f(double x) {
+  double res = 0;
+  for (int i = 0; i <= degree; i++) {
+    res += coeff[i] * pow(x, degree - i);
+  }
+  return res;
 }
 
-double falsePosition(double a, double b, double E, ofstream &out){
-    double c;
-    int count = 0;
+double falsePosition(double a, double b, double E, ofstream &out) {
+  double c;
+  int count = 0;
 
-    double fa = f(a);
-    double fb = f(b);
+  double fa = f(a);
+  double fb = f(b);
 
-    while(true){
-        c = a - fa * (b - a)/(fb - fa);
-        count++;
+  while (true) {
+    c = a - fa * (b - a) / (fb - fa);
+    count++;
 
-        if(fabs(f(c)) < E){
-            out << "iterations : " << count << "\n";
-            return c;
-        }
+    double fc = f(c);
 
-        double fc = f(c);
-        
-        if(fa * fc < 0){
-            b = c;
-            fb = fc;
-        }
-        else{
-            a = c;
-            fa = fc;
-        }
+    if (fabs(fc) < E) {
+      out << "Iterations : " << count << "\n";
+      return c;
     }
 
-    out << "iterations : " << count << "\n";
-    return c;
+    if (fa * fc < 0) {
+      b = c;
+      fb = fc;
+    } else {
+      a = c;
+      fa = fc;
+    }
+  }
 }
 
-int main(){
-    ifstream input("input.txt");
-    ofstream out("output.txt");
+int main() {
+  ifstream input("D:\\Numerical project\\Non-Linear Equation Methods\\False "
+                 "Position method\\input.txt");
+  ofstream out("D:\\Numerical project\\Non-Linear Equation Methods\\False "
+               "Position method\\output.txt");
 
-    double start, ends;
-    input >> start >> ends;
-
-    out << fixed << setprecision(6);
-    out << "The search interval is: " << start << " to " << ends << "\n\n";
-
-    double E = 1e-4;
-    double a = start, b;
-    double step = 0.1;
-
-    while(a < ends){
-        b = a + step;
-        if(b > ends) b = ends;
-
-        if(fabs(f(a)) < E){
-            out << "The root is at = " << a << "\n";
-        }
-
-        if(f(a) * f(b) < 0){
-            double root = falsePosition(a, b, E, out);
-            out << "The roots are in between " << a << " and " << b
-                << " the root is = " << root << "\n\n";
-        }
-
-        a = b;
-    }
-
-    input.close();
-    out.close();
+  if (!input) {
+    cout << "ERROR: input.txt not found!\n";
     return 0;
+  }
+
+  input >> degree;
+
+  coeff.resize(degree + 1);
+  for (int i = 0; i <= degree; i++) {
+    input >> coeff[i];
+  }
+
+  double start, ends;
+  input >> start >> ends;
+  input.close();
+
+  out << fixed << setprecision(6);
+
+  out << "Equation:\n";
+  for (int i = 0; i <= degree; i++) {
+    if (coeff[i] == 0)
+      continue;
+
+    if (i != 0 && coeff[i] > 0)
+      out << " + ";
+    if (coeff[i] < 0)
+      out << " - ";
+
+    out << fabs(coeff[i]);
+    int power = degree - i;
+    if (power > 0)
+      out << "x";
+    if (power > 1)
+      out << "^" << power;
+  }
+  out << "\n\n";
+
+  out << "False Position Method\n";
+  out << "The search interval is: " << start << " to " << ends << "\n\n";
+
+  double E = 1e-4;
+  double step = 0.1;
+
+  double a = start, b;
+  while (a < ends) {
+    b = a + step;
+    if (b > ends)
+      b = ends;
+
+    if (fabs(f(a)) < E) {
+      out << "Root found at x = " << a << "\n";
+    }
+
+    if (f(a) * f(b) < 0) {
+      out << "Root lies between [" << a << ", " << b << "]\n";
+      double root = falsePosition(a, b, E, out);
+      out << "Root = " << root << "\n\n";
+    }
+
+    a = b;
+  }
+
+  out.close();
+  return 0;
 }
+
 ```
 
 #### False Position Input
 ```
+4
+1 -3 2 6 0
 -2.24 2.24
+
 ```
 
 #### False Position Output
 ```
+Equation:
+1.000000x^4 - 3.000000x^3 + 2.000000x^2 + 6.000000x
+
+False Position Method
 The search interval is: -2.240000 to 2.240000
 
-iterations : 4
-The roots are in between -1.040000 and -0.940000 the root is = -0.999999
+Root lies between [-1.040000, -0.940000]
+Iterations : 4
+Root = -0.999999
 
-iterations : 2
-The roots are in between -0.040000 and 0.060000 the root is = -0.000014
+Root lies between [-0.040000, 0.060000]
+Iterations : 2
+Root = -0.000014
+
+
 ```
 
 ---
@@ -346,6 +449,7 @@ The roots are in between -0.040000 and 0.060000 the root is = -0.000014
 ### Newton-Raphson Method
 
 #### Newton-Raphson Theory
+Newton–Raphson Method is a numerical method used to find a root of a real-valued function. It starts with an initial guess and repeatedly improves it using the function and its derivative.
 
 - If f(x) is a real and continuously differentiable function, the Newton–Raphson method is used to find a root of the equation f(x) = 0.
 
@@ -367,113 +471,148 @@ using namespace std;
 const double E = 1e-6;
 const int max_it = 1000;
 
+int degree;
+vector<double> coeff;
 
-double f(double x){
-    
-    return x*x*x - x;
+double f(double x) {
+  double res = 0;
+  for (int i = 0; i <= degree; i++) {
+    res += coeff[i] * pow(x, degree - i);
+  }
+  return res;
 }
 
-double diff(double x){
-    return 3*x*x - 1;
+double diff(double x) {
+  double res = 0;
+  for (int i = 0; i < degree; i++) {
+    res += coeff[i] * (degree - i) * pow(x, degree - i - 1);
+  }
+  return res;
 }
-
 
 void newton(double x, double &r, ofstream &out) {
+  int counts = 0;
+
+  while (counts < max_it) {
     double fx = f(x);
-    double f_px = diff(x);
+    double fpx = diff(x);
 
-    if (f_px == 0) { 
-        x = x + 0.5;
-        f_px = diff(x);
+    if (fabs(fpx) < 1e-12) {
+      x += 0.5;
+      continue;
     }
 
-    r = x - (fx / f_px);
-    int counts = 0;
+    r = x - fx / fpx;
 
-    while (fabs(r - x) >= E && counts < max_it) {
-        x = r;
-        counts++;
-        fx = f(x);
-        f_px = diff(x);
-
-        if (f_px == 0) {
-            x = x + 0.5;
-            f_px = diff(x);
-        }
-
-        r = x - (fx / f_px);
+    if (fabs(r - x) < E) {
+      out << "The root = " << r << " found after " << counts
+          << " iterations.\n\n";
+      return;
     }
 
-    if (counts >= max_it) {
-        out << "No real root is found starting from " << x << ".\n";
-        return;
-    }
+    x = r;
+    counts++;
+  }
 
-    out << "The root " << r << " is found after " << counts << " iterations.\n\n";
+  out << "No real root found starting from this initial guess.\n\n";
 }
 
 int main() {
-    ifstream input("input.txt");
-    ofstream out("output.txt");
+  ifstream input("D:\\Numerical project\\Non-Linear Equation Methods\\Newton "
+                 "Raphson method\\input.txt");
+  ofstream out("D:\\Numerical project\\Non-Linear Equation Methods\\Newton "
+               "Raphson method\\output.txt");
 
-    if(!input){
-        cout << "Error: input.txt not found!\n";
-        return 0;
-    }
-
-    double start, ends;
-    input >> start >> ends;
-    input.close();
-
-    out << fixed << setprecision(6);
-    out << "Newton-Raphson Method\n";
-    out << "Search interval: " << start << " to " << ends << "\n\n";
-
-    double step = 0.5;
-    double a = start, b, r;
-    bool found = false;
-
-    while(a < ends){
-        b = a + step;
-        if(b > ends) b = ends;
-
-        if(f(a) * f(b) < 0){
-            out << "Interval [" << a << ", " << b << "] seems to contain a root.\n";
-            newton(a, r, out);
-            found = true;
-        }
-
-        a = b;
-    }
-
-    if(!found){
-        out << "No sign change detected automatically.\n";
-        out << "Please enter a guessed value of x in the input file for manual root search.\n";
-    }
-
-    out.close();
+  if (!input) {
+    cout << "Error: input.txt not found!\n";
     return 0;
+  }
+
+  input >> degree;
+
+  coeff.resize(degree + 1);
+  for (int i = 0; i <= degree; i++) {
+    input >> coeff[i];
+  }
+
+  double start, ends;
+  input >> start >> ends;
+  input.close();
+
+  out << fixed << setprecision(6);
+
+  out << "Equation:\n";
+  for (int i = 0; i <= degree; i++) {
+    if (coeff[i] == 0)
+      continue;
+
+    if (i != 0 && coeff[i] > 0)
+      out << " + ";
+    if (coeff[i] < 0)
+      out << " - ";
+
+    out << fabs(coeff[i]);
+    int power = degree - i;
+    if (power > 0)
+      out << "x";
+    if (power > 1)
+      out << "^" << power;
+  }
+  out << "\n\n";
+
+  out << "Newton-Raphson Method\n";
+  out << "Search interval: " << start << " to " << ends << "\n\n";
+
+  double step = 0.5;
+  double a = start, b, r;
+  bool found = false;
+
+  while (a < ends) {
+    b = a + step;
+    if (b > ends)
+      b = ends;
+
+    if (f(a) * f(b) < 0) {
+      out << "Interval [" << a << ", " << b << "] contains a root.\n";
+      newton(a, r, out);
+      found = true;
+    }
+
+    a = b;
+  }
+
+  out.close();
+  return 0;
 }
+
 ```
 
 #### Newton-Raphson Input
 ```
+3
+1 0 -1 0
 -2.23 2.23
+
 ```
 
 #### Newton-Raphson Output
 ```
+Equation:
+1.000000x^3 - 1.000000x
+
 Newton-Raphson Method
 Search interval: -2.230000 to 2.230000
 
-Interval [-1.230000, -0.730000] seems to contain a root.
-The root -1.000000 is found after 4 iterations.
+Interval [-1.230000, -0.730000] contains a root.
+The root = -1.000000 found after 4 iterations.
 
-Interval [-0.230000, 0.270000] seems to contain a root.
-The root 0.000000 is found after 3 iterations.
+Interval [-0.230000, 0.270000] contains a root.
+The root = 0.000000 found after 3 iterations.
 
-Interval [0.770000, 1.270000] seems to contain a root.
-The root 1.000000 is found after 5 iterations.
+Interval [0.770000, 1.270000] contains a root.
+The root = 1.000000 found after 5 iterations.
+
+
 ```
 
 ---
@@ -498,84 +637,131 @@ using namespace std;
 const double E = 1e-6;
 const int max_it = 1000;
 
+int degree;
+vector<double> coeff;
+
 double f(double x) {
-    return 3*x - cos(x) - 1;
+  double res = 0;
+  for (int i = 0; i <= degree; i++) {
+    res += coeff[i] * pow(x, degree - i);
+  }
+  return res;
 }
 
 void secant(double x, double x1, double &r, ofstream &out) {
-    double fx = f(x);
-    double fx1 = f(x1);
+  double fx = f(x);
+  double fx1 = f(x1);
+  int counts = 0;
 
-    r = x1 - ((fx1 * (x1 - x)) / (fx1 - fx));
-    int counts = 0;
+  while (fabs(x1 - x) >= E && counts < max_it) {
+    fx = f(x);
+    fx1 = f(x1);
 
-    while (fabs(x1 - x) >= E && counts < max_it) {
-        counts++;
-        fx = f(x);
-        fx1 = f(x1);
-
-        r = x1 - ((fx1 * (x1 - x)) / (fx1 - fx));
-        x = x1;
-        x1 = r;
+    if (fx1 - fx == 0) {
+      out << "Division by zero encountered.\n";
+      return;
     }
 
-    if (counts >= max_it) {
-        out << "No real root is found in this interval.\n";
-        return;
-    }
+    r = x1 - (fx1 * (x1 - x)) / (fx1 - fx);
+    x = x1;
+    x1 = r;
+    counts++;
+  }
 
-    out << "The root " << r << " is found after " << counts << " iterations.\n";
+  if (counts >= max_it) {
+    out << "No real root found in this interval.\n";
+    return;
+  }
+
+  out << "The root = " << r << " found after " << counts << " iterations.\n";
 }
 
 int main() {
-    ifstream input("D:\\Numerical project\\secant method\\input.txt");
-    ofstream out("D:\\Numerical project\\secant method\\output.txt");
+  ifstream input("D:\\Numerical project\\Non-Linear Equation Methods\\secant "
+                 "method\\input.txt");
+  ofstream out("D:\\Numerical project\\Non-Linear Equation Methods\\secant "
+               "method\\output.txt");
 
-    if (!input) {
-        cout << "ERROR: input.txt not found!\n";
-        return 0;
-    }
-
-    double start, ends;
-    input >> start >> ends;
-    input.close();
-
-    double step = 0.5;
-    double a = start, b, r;
-
-    out << fixed << setprecision(6);
-    out << "Secant Method\n";
-    out << "Checking intervals for possible roots...\n";
-
-    while (a < ends) {
-        b = a + step;
-
-        if (f(a) * f(b) < 0) {
-            out << "\nInterval [" << a << ", " << b << "] seems to contain a root.\n";
-            secant(a, b, r, out);
-        }
-
-        a = b;
-    }
-
-    out.close();
+  if (!input) {
+    cout << "ERROR: input.txt not found!\n";
     return 0;
+  }
+
+  input >> degree;
+
+  coeff.resize(degree + 1);
+  for (int i = 0; i <= degree; i++) {
+    input >> coeff[i];
+  }
+
+  double start, ends;
+  input >> start >> ends;
+  input.close();
+
+  out << fixed << setprecision(6);
+
+  out << "Equation:\n";
+  for (int i = 0; i <= degree; i++) {
+    if (coeff[i] == 0)
+      continue;
+
+    if (i != 0 && coeff[i] > 0)
+      out << " + ";
+    if (coeff[i] < 0)
+      out << " - ";
+
+    out << fabs(coeff[i]);
+    int power = degree - i;
+    if (power > 0)
+      out << "x";
+    if (power > 1)
+      out << "^" << power;
+  }
+  out << "\n\n";
+
+  out << "Secant Method\n";
+  out << "Searching interval: [" << start << ", " << ends << "]\n";
+
+  double step = 0.5;
+  double a = start, b, r;
+
+  while (a < ends) {
+    b = a + step;
+    if (b > ends)
+      b = ends;
+
+    if (f(a) * f(b) < 0) {
+      out << "\nInterval [" << a << ", " << b << "] contains a root.\n";
+      secant(a, b, r, out);
+    }
+
+    a = b;
+  }
+
+  out.close();
+  return 0;
 }
 
 ```
 
 #### Secant Input
 ```
--2.23 2.23
+3
+3 0 -1 -1
+0 2
+
 ```
 
 #### Secant Output
 ```
-Secant Method
-Checking intervals for possible roots...
+Equation:
+3.000000x^3 - 1.000000x - 1.000000
 
-Interval [0.270000, 0.770000] seems to contain a root.
-The root 0.607102 is found after 4 iterations.
+Secant Method
+Searching interval: [0.000000, 2.000000]
+
+Interval [0.500000, 1.000000] contains a root.
+The root = 0.851383 found after 6 iterations.
 
 ```
 
@@ -594,21 +780,93 @@ A linear equation is an equation in which the highest power (degree) of the vari
 
 #### Gauss Elimination Theory
 
-[Add your Gauss Elimination theory here]
+The Gauss Elimination Method is used to solve a system of linear equations by converting it into an upper triangular matrix and then solving it by back substitution.
+
+Steps:
+1. Write the augmented matrix of the system of equations.
+2. Forward Elimination:
+   - Eliminate elements below the main diagonal using row operations.
+   - Convert the matrix into an upper triangular form.
+3. Back Substitution:
+   - Start from the last row and calculate the value of the last variable.
+   - Substitute this value into the rows above to find the remaining variables.
+4. Result:
+   - All variables are calculated step by step.
 
 #### Gauss Elimination Code
 ```cpp
-// Add your Gauss Elimination code here
+#include <iostream>
+#include <fstream>
+#include <iomanip>
+
+using namespace std;
+
+int main() {
+    ifstream fin("input3.txt");
+    ofstream fout("output3.txt");
+
+    int n;
+    fin >> n;
+
+    int a[10][11], x[10];
+
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j <= n; j++)
+            fin >> a[i][j];
+
+    for (int i = 0; i < n - 1; i++) {
+        for (int k = i + 1; k < n; k++) {
+            int f = a[k][i] / a[i][i];
+            for (int j = i; j <= n; j++)
+                a[k][j] -= f * a[i][j];
+        }
+    }
+
+    for (int i = n - 1; i >= 0; i--) {
+        x[i] = a[i][n];
+        for (int j = i + 1; j < n; j++)
+            x[i] -= a[i][j] * x[j];
+        x[i] /= a[i][i];
+    }
+
+    for (int i = 0; i < n; i++)
+        fout << "x" << i + 1 << " = " << x[i] << endl;
+
+    fout << "\nFinal Upper Triangular Matrix:\n";
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j <= n; j++)
+            fout << setw(5) << a[i][j] << " ";
+        fout << endl;
+    }
+
+    fin.close();
+    fout.close();
+
+    return 0;
+}
+
 ```
 
 #### Gauss Elimination Input
 ```
-Add your Gauss Elimination input here
+3
+2 1 -1 8
+-3 -1 2 -11
+-2 1 2 -3
+
 ```
 
 #### Gauss Elimination Output
 ```
-Add your Gauss Elimination output here
+x1 = 2
+x2 = 3
+x3 = -1
+
+Final Upper Triangular Matrix:
+    2     1    -1     8 
+    0    -0     0     1 
+    0     0     3     3 
+
 ```
 
 ---
@@ -617,21 +875,92 @@ Add your Gauss Elimination output here
 
 #### Gauss Jordan Theory
 
-[Add your Gauss Jordan theory here]
+The Gauss–Jordan Elimination Method is used to solve a system of linear equations by reducing the augmented matrix to diagonal form (or reduced row echelon form), so that the solution can be read directly without back substitution.
+
+Steps:
+1. Write the augmented matrix of the system of equations.
+2. Forward Elimination:
+   - Eliminate elements below the main diagonal to form an upper triangular matrix.
+3. Backward Elimination:
+   - Eliminate elements above the main diagonal to form a diagonal matrix.
+4. Normalization:
+   - Divide each row by its pivot element so that all diagonal elements become 1.
+5. Result:
+   - The solution of the system is directly obtained from the last column of the matrix.
 
 #### Gauss Jordan Code
 ```cpp
-// Add your Gauss Jordan code here
+#include <iostream>
+#include <fstream>
+#include <iomanip>
+
+using namespace std;
+
+int main() {
+    ifstream fin("input.txt");
+    ofstream fout("output.txt");
+
+    int n;
+    fin >> n;
+
+    int a[10][11];
+
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j <= n; j++)
+            fin >> a[i][j];
+
+    for (int i = 0; i < n; i++) {
+        int p = a[i][i];
+        for (int j = 0; j <= n; j++)
+            a[i][j] /= p; 
+
+        for (int k = 0; k < n; k++) {
+            if (k != i) {
+                int f = a[k][i];
+                for (int j = 0; j <= n; j++)
+                    a[k][j] -= f * a[i][j]; 
+            }
+        }
+    }
+
+    for (int i = 0; i < n; i++)
+        fout << "x" << i + 1 << " = " << a[i][n] << endl;
+
+    fout << "\nFinal Reduced Matrix (RREF):\n";
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j <= n; j++)
+            fout << setw(5) << a[i][j] << " ";
+        fout << endl;
+    }
+
+    fin.close();
+    fout.close();
+
+    return 0;
+}
+
 ```
 
 #### Gauss Jordan Input
 ```
-Add your Gauss Jordan input here
+3
+2 1 -1 8
+-3 -1 2 -11
+-2 1 2 -3
+
 ```
 
 #### Gauss Jordan Output
 ```
-Add your Gauss Jordan output here
+x1 = 2
+x2 = 3
+x3 = -1
+
+Final Reduced Matrix (RREF):
+    1     0     0     2 
+    0     1     0     3 
+    0     0     1    -1 
+
 ```
 
 ---
@@ -639,6 +968,9 @@ Add your Gauss Jordan output here
 ### LU Decomposition Method
 
 #### LU Decomposition Theory
+LU Decomposition Method is a matrix factorization technique in which a square matrix A is expressed as the product of a lower triangular matrix L and an upper triangular matrix U, such that
+                A=LU.
+It is mainly used to solve systems of linear equations efficiently by first decomposing the matrix and then applying forward and backward substitution.
 
 To factor any square matrix into two triangular matrices, i.e., one is a lower triangular matrix and the other is an upper triangular matrix, we can use the following steps.
 
@@ -775,6 +1107,9 @@ Solution Vector X:
 ### Matrix Inversion Method
 
 #### Matrix Inversion Theory
+Matrix Inversion is the process of finding a matrix A^-1 for a given square matrix A such that
+                  AA^-1 = A^-1A= 1
+where I is the identity matrix. The inverse exists only if the matrix is non-singular (has a non-zero determinant).
 
 AX = B
 
@@ -938,52 +1273,120 @@ x3 = -1.33333
 
 ## Differential Equations
 
----
+A differential equation is an equation that involves an unknown function and one or more of its derivatives with respect to one or more independent variables.
+
+Example-
+
+dy/dx = 3x^2
 
 ### Runge-Kutta Method
 
 #### Runge-Kutta Theory
 
-[Add your Runge-Kutta theory here]
+The Runge-Kutta 4th Order Method (RK4) is a numerical technique to solve ordinary differential equations (ODEs) of the form:
+
+    dy / dx = f(x , y) ,  y(x0) = y0
+    
+It is more accurate than simple methods because it estimates the slope at multiple points within a step.
+
+Steps:
+1. Start with initial values:
+  - x = x0 ,   y = y0
+   and choose a step size h.
+2. Calculate intermediate slopes:
+  - k1 = h ⋅ f( x, y )
+  - k2 = h ⋅ f( x + h / 2 , y + k1 / 2)
+  - k3 = h ⋅ f( x + h / 2 , y + k2 / 2)
+  - k4 = h ⋅ f( x + h , y + k3 ) 
+3. Update the solution:
+  - y(next) = y + ( k1 + 2*k2 + 2*k3 + k4 ) / 6
+  - x(next) = x + h 
+4. Repeat the process until reaching the desired value of x = xn .
 
 #### Runge-Kutta Code
 ```cpp
-// Add your Runge-Kutta code here
+#include <iostream>
+#include <fstream>
+#include <iomanip>
+
+using namespace std;
+
+double f(double x, double y) {
+    return x + y * y;
+}
+
+int main() {
+    ifstream fin("input.txt");
+    ofstream fout("output.txt");
+
+    double x0, y0, xn, h;
+
+    fin >> x0;
+    fin >> y0;
+    fin >> xn;
+    fin >> h;
+
+    double x = x0;
+    double y = y0;
+    int iteration = 0;
+
+    while (x < xn) {
+        double k1 = h * f(x, y);
+        double k2 = h * f(x + h/2, y + k1/2);
+        double k3 = h * f(x + h/2, y + k2/2);
+        double k4 = h * f(x + h, y + k3);
+
+        y = y + (k1 + 2*k2 + 2*k3 + k4) / 6;
+        x = x + h;
+        iteration++;
+    }
+
+    fout << fixed << setprecision(5);
+    fout << "Value of y at x = " << xn << " is: " << y << endl;
+    fout << "Total iterations = " << iteration << endl;
+
+    fin.close();
+    fout.close();
+
+    return 0;
+}
 ```
 
 #### Runge-Kutta Input
 ```
-Add your Runge-Kutta input here
+0
+1
+0.2
+0.1
 ```
 
 #### Runge-Kutta Output
 ```
-Add your Runge-Kutta output here
+Value of y at x = 0.20000 is: 1.27356
+Total iterations = 2
 ```
 
 ---
 
-## Interpolation
-Interpolation is the process of estimating the value of a function at a point that lies between two known data points.It uses known values of a function to construct a new function (often a polynomial) that approximates the original function and allows us to compute missing values inside the data interval.
+## Interpolation 
+
+Interpolation is the process of estimating the value of a function at a point that lies between two known data points. It uses known values of a function to construct a new function (often a polynomial) that approximates the original function and allows us to compute missing values inside the data interval.
 
 ---
 
-### Newton's Forward Interpolation
+### Newton's Forward Interpolation 
 
-#### Newtons Forward Theory
+#### Newtons Forward interpolation Theory
+Newton's forward interpolation method is used to estimate values near the beginning of a table when data points (x is the data point) are equally spaced.
 
+- Let x₀, x₁, x₂, ... , xₙ₋₁, xₙ be a set of equally spaced values of the independent variable x.
 
--Newton’s forward interpolation method is used to estimate values near the beginning of a table when data points(x is data point) are equally spaced.
+- So x₁ − x₀ = x₂ − x₁ = x₃ − x₂ = ... = xₙ − xₙ₋₁ = h
 
--Let x₀, x₁, x₂, … , xₙ₋₁, xₙ  be a set of equally spaced values of the independent variable x.
+- Let, u = (x − x₀) / h
 
--So x₁ − x₀ = x₂ − x₁ = x₃ − x₂ = … = xₙ − xₙ₋₁ = h
-
--Let, u = (x − x₀) / h
-
--The Newton’s forward difference interpolation formula for equal intervals is:
+- The Newton's forward difference interpolation formula for equal intervals is:
     y = y₀ + u Δy₀ + [u(u − 1) / 2!] Δ²y₀+ [u(u − 1)(u − 2) / 3!] Δ³y₀+ … + [u(u − 1)(u − 2) … (u − n - 1) / n!] Δⁿy₀
-
 
 #### Newtons Forward Code
 ```cpp
@@ -1042,7 +1445,6 @@ int main(){
 4 64
 5 125
 2.5
-
 ```
 
 #### Newtons Forward Output
@@ -1061,16 +1463,19 @@ Interpolated Value at x=2.5 is: 15.625
 
 ### Newton's Backward Interpolation
 
-#### Newtons Backward Theory
+#### Newtons Backward interpolation Theory
+Newton’s Backward Interpolation is used to estimate the value of a function when the required value lies near the end of a set of equally spaced data points.
 
- -Backward interpolation is used when the value of x lies near the end of the table.
- 
- -Let x₀, x₁, x₂, … , xₙ₋₁, xₙ be a set of equally spaced values of the independent variable x.
- -The interval between successive values is constant, i.e., x₁ − x₀ = x₂ − x₁ = x₃ − x₂ = … = xₙ − xₙ₋₁ = h
- -Let, u = (x − xₙ) / h
- -The Newton’s backward difference interpolation formula for equal intervals is:
-  y = yₙ + u∇yₙ+ [u(u + 1) / 2!] ∇²yₙ+ [u(u + 1)(u + 2) / 3!] ∇³yₙ+ … + [u(u + 1)(u + 2)…(u + n − 1) / n!] ∇ⁿyₙ
+- Backward interpolation is used when the value of x lies near the end of the table.
 
+- Let x₀, x₁, x₂, ... , xₙ₋₁, xₙ be a set of equally spaced values of the independent variable x.
+
+- The interval between successive values is constant, i.e., x₁ − x₀ = x₂ − x₁ = x₃ − x₂ = ... = xₙ − xₙ₋₁ = h
+
+- Let, u = (x − xₙ) / h
+
+- The Newton's backward difference interpolation formula for equal intervals is:
+  y = yₙ + u∇yₙ+ [u(u + 1) / 2!] ∇²yₙ+ [u(u + 1)(u + 2) / 3!] ∇³yₙ+ ... + [u(u + 1)(u + 2)…(u + n − 1) / n!] ∇ⁿyₙ
 
 #### Newtons Backward Code
 ```cpp
@@ -1116,7 +1521,6 @@ int main(){
     cout<<"\nInterpolated Value at x="<<x_val<<" is: "<<ans<<endl;
     return 0;
 }
-
 ```
 
 #### Newtons Backward Input
@@ -1140,7 +1544,6 @@ Backward Difference Table:
      5       125        61        24         6         0
 
 Interpolated Value at x=4.5 is: 91.125
-
 ```
 
 ---
@@ -1148,21 +1551,19 @@ Interpolated Value at x=4.5 is: 91.125
 ### Divided Difference Method
 
 #### Divided Difference Theory
+The Newton's Divided Difference Interpolation Method is used to estimate the value of a function when the given data points are not equally spaced.
 
--The Newton’s Divided Difference Interpolation Method is used to estimate the value of a function when the given data points are not equally spaced.
-
--The interpolation polynomial is given by:
+- The interpolation polynomial is given by:
 
 f(xₙ)= f(x₀) + (x - x₀) f [x₁, x₀] + (x - x₀)(x - x₁) f[x₂, x₁, x₀] +...+ (x - x₀)(x - x₁)...(x − xₙ₋₁) f[xₙ, xₙ₋₁,..., x₁, x₀]...(1)
 
 Here divided differences are defined as:
 
--First order divided difference:
+- First order divided difference:
 f [ xᵢ, xⱼ ] = [ f(xᵢ) - f(xⱼ) ] / xᵢ - xⱼ …..(2)
 
--Second order divided difference:
+- Second order divided difference:
 f [ xᵢ, xⱼ, xₖ ] = [ f(xᵢ, xⱼ) - f(xⱼ, xₖ) ] / xᵢ - xₖ …..(3)
-
 
 #### Divided Difference Code
 ```cpp
@@ -1229,20 +1630,26 @@ Interpolated value: 9
 
 ## Numerical Differentiation
 
-#### Numerical Differentiation Theory
+---
 
--This formula is the Newton’s Forward Differentiation Formula, used to find the first derivative of a function when the tabulated values of x are equally spaced.
+### Newton's Forward Differentiation
 
--Let, x₀, x₁, x₂, … , xₙ be equally spaced values with h = x₁ − x₀
+#### Newtons Forward Differentiation Theory
+It is used to find the first derivative of a function when the values of ( x ) are equally spaced and the derivative is required near the beginning of the data table.
 
--Let, u = (x − x₀) / h measures how far the point x is from the starting value x0​ in terms of step size.
+- Let, x₀, x₁, x₂, … , xₙ be equally spaced values with h = x₁ − x₀
 
--So, the first derivative formula for forward differentiation is:
-y’ = (1/h) [ Δy₀ + (2u − 1)/2! · Δ²y₀ + (3u² − 6u + 2)/3! · Δ³y₀ + (4u³ − 18u² + 22u - 6)/4! · Δ⁴y₀ + … ]
+- Let, u = (x − x₀) / h measures how far the point x is from the starting value x₀​ in terms of step size.
 
--Δy0,Δ^2y0,Δ^3y0​,… are forward differences of the function values.
+- So, the first derivative formula for forward differentiation is:
 
-#### Numerical Differentiation Code
+          y’ = (1/h) [ Δy₀ + (2u − 1)/2! · Δ²y₀ + (3u² − 6u + 2)/3! · Δ³y₀ + (4u³ − 18u² +   
+          22u - 6)/4! · Δ⁴y₀ + … ]
+          
+- Δy₀,Δ²y₀,Δ³y₀​,… are forward differences of the function values.
+
+
+#### Newtons Forward Differentiation Code
 ```cpp
 #include <iostream>
 #include <iomanip>
@@ -1255,7 +1662,8 @@ double facto(int n){
 }
 
 int main(){
-    int n;cin>>n;
+    int n;
+    cin>>n;
     double x[50],y[50][50],X;
 
     for(int i=0;i<n;i++)cin>>x[i]>>y[i][0];
@@ -1284,9 +1692,11 @@ int main(){
     return 0;
 }
 
+
+
 ```
 
-#### Numerical Differentiation Input
+#### Newtons Forward Differentiation Input
 ```
 5
 1 1
@@ -1295,9 +1705,10 @@ int main(){
 4 64
 5 125
 2
+
 ```
 
-#### Numerical Differentiation Output
+#### Newtons Forward Differentiation Output
 ```
 Forward Difference Table:
      1         1         7        12         6         0
@@ -1307,6 +1718,91 @@ Forward Difference Table:
      5       125
 
 First derivative at x=2 is: 12
+```
+
+---
+
+### Newton's Backward Differentiation
+
+#### Newtons Backward Differentiation Theory
+The Numerical Backward Differentiation Method is a numerical technique used to approximate the derivative of a function when the value of the function is known at equally spaced points. This method is particularly useful when the required derivative is to be evaluated near the end of the given data set.
+
+- Let x₀, x₁, x₂, … , xₙ be equally spaced values with h = x₁ − x₀
+- Let v = (x − xₙ) / h measures how far the point x is from the ending value xₙ  in terms of step size.
+- So, the first derivative formula for backward differentiation is:
+
+       y' = (1/h) [ ∇yₙ + (2v + 1)/2! · ∇²yₙ + (3v² + 6v + 2)/3! · ∇³yₙ + (4v³ + 18v² + 22v 
+       + 6)/4! · ∇⁴yₙ + … ]
+
+- ∇yₙ,∇²yₙ,∇³yₙ​,… are forward differences of the function values.
+
+#### Newtons Backward Differentiation Code
+```cpp
+#include <iostream>
+#include <iomanip>
+using namespace std;
+
+double facto(int n){
+    double f=1;
+    for(int i=2;i<=n;i++)f*=i;
+    return f;
+}
+
+int main(){
+    int n;cin>>n;
+    double x[50],y[50][50],X;
+
+    for(int i=0;i<n;i++)cin>>x[i]>>y[i][0];
+    cin>>X;
+
+    for(int j=1;j<n;j++)
+        for(int i=n-1;i>=j;i--)
+            y[i][j]=y[i][j-1]-y[i-1][j-1];
+
+    cout<<"Backward Difference Table:\n";
+    for(int i=0;i<n;i++){
+        cout<<setw(6)<<x[i];
+        for(int j=0;j<=i;j++)
+            cout<<setw(10)<<y[i][j];
+        cout<<endl;
+    }
+
+    double h=x[1]-x[0];
+    double u=(X-x[n-1])/h;
+
+    double dydx=y[n-1][1]
+               +(2*u+1)*y[n-1][2]/2
+               +(3*u*u+6*u+2)*y[n-1][3]/6;
+
+    dydx/=h;
+
+    cout<<"\nFirst derivative at x="<<X<<" is : "<<dydx<<endl;
+    return 0;
+}
+
+```
+
+#### Newtons Backward Differentiation Input
+```
+5
+1 1
+2 8
+3 27
+4 64
+5 125
+4
+```
+
+#### Newtons Backward Differentiation Output
+```
+Backward Difference Table:
+     1         1
+     2         8         7
+     3        27        19        12
+     4        64        37        18         6
+     5       125        61        24         6         0
+
+First derivative at x=4 is : 48
 
 ```
 
@@ -1314,17 +1810,38 @@ First derivative at x=2 is: 12
 
 ## Curve Fitting
 
----
+Curve fitting is a method that is used to find a mathematical equation that best approximates a set of given data points. The equation is chosen so that the error between the actual data and the fitted curve is minimized. It usually uses the least squares method.
 
 ### Curve Fitting: Linear Equation
 
 #### Linear Theory
+Linear regression is the process of finding a straight-line equation that best fits a given set of data points.
 
-[Add your Linear Curve Fitting theory here]
+Steps:
+
+Collect data points:
+ - pairs of (xi,yi)
+
+Assume a linear model:
+ - The equation is:
+ y=a+bx
+
+Form the normal equations:
+ - Apply the least squares method to minimize the error:
+ ∑(yi−(a+bxi))^2
+ - This leads to two equations in a and b:
+ ∑y=na+b∑x
+ ∑xy=a∑x+b∑x^2
+
+Result:
+ - The straight line
+ y=a+bx
+ best approximates the given data.
+
 
 #### Linear Code
 ```cpp
-#include <bits/stdc++.h>
+#include <bits/stdc++.h>//y=a+bx;
 using namespace std;
 
 int main() {
@@ -1350,17 +1867,11 @@ int main() {
     cout<<fixed<<setprecision(4);
     cout<<"a(intercept) = "<<a<<"\n";
     cout<<"b(slope) = "<<b<<"\n\n";
-
-    cout<<"Predicted y values:\n";
-    for(int i =0; i<n; i++) {
-        double y_calc=a+b*x[i];
-        cout<<"x = "<<x[i]<<", y = "<<y_calc<<"\n";
-    }
     return 0;
 }
 ```
 
-#### Linear Input
+#### Linear Input  
 ```
 5
 1 2
@@ -1370,17 +1881,11 @@ int main() {
 5 6
 ```
 
-#### Linear Output
+#### Linear Output  
 ```
 a (intercept) = 1.3000
 b (slope) = 0.9000
 
-Predicted y values:
-x = 1 , y = 2.2000
-x = 2 , y = 3.1000
-x = 3 , y = 4.0000
-x = 4 , y = 4.9000
-x = 5 , y = 5.8000
 ```
 
 ---
@@ -1388,10 +1893,31 @@ x = 5 , y = 5.8000
 ### Curve Fitting: Transcendental Equation
 
 #### Transcendental Theory
+Transcendental regression is used when the data follows an exponential relationship.
 
-[Add your Transcendental Curve Fitting theory here]
+Steps:
 
-#### Transcendental Code 
+Collect data points:
+ - n pairs of (xi,yi).
+
+Assume an exponential model:
+ - The equation is: y=ae^bx
+    
+Transform the equation:
+ - Take natural logarithm on both sides:
+ ln⁡y=ln⁡a+bx
+ - Let Y=ln⁡yY and A=ln⁡a, so the equation becomes:
+ Y=A+bx
+
+Form the normal equations:
+ - Apply the least squares method to the transformed linear form :
+ ∑ Y = nA+b∑x
+∑ xY = A∑x+b∑x^2
+
+Result: Exponential function y= ae^bx
+
+
+#### Transcendental Code
 ```cpp
 #include <bits/stdc++.h>//y=ae^bx
 using namespace std;
@@ -1426,15 +1952,9 @@ int main() {
     cout<<"b = "<<b<<"\n";
     cout<<"Model: y = "<<a<<" * e^("<<b<<"x)\n\n";
 
-    cout<<"Calculated y values:\n";
-    for (int i= 0;i<n;i++) {
-        double y_calc=a*exp(b* x[i]);
-        cout<<"x = "<< x[i]<<", y = "<<y_calc<<"\n";
-    }
     return 0;
 }
 ```
-
 
 #### Transcendental Input
 ```
@@ -1444,7 +1964,6 @@ int main() {
 3 6.2
 4 9.1
 5 13.5
-
 ```
 
 #### Transcendental Output
@@ -1453,12 +1972,6 @@ a = 1.827779
 b = 0.401616
 Model: y = 1.827779 * e^(0.401616x)
 
-Calculated y values:
-x = 1, y = 2.731136
-x = 2, y = 4.080968
-x = 3, y = 6.097936
-x = 4, y = 9.111768
-x = 5, y = 13.615149
 ```
 
 ---
@@ -1467,71 +1980,260 @@ x = 5, y = 13.615149
 
 #### Polynomial Theory
 
-[Add your Polynomial Curve Fitting theory here]
+A polynomial equation is an equation formed by variables and coefficients, where the highest power of the variable is a non-negative integer. In polynomial curve fitting, we fit a polynomial of degree m to n data points (xi, yi).
+
+Steps:
+1. Collect data points:
+   - n pairs of (xi, yi).
+2. Choose the degree m of the polynomial:
+   - The polynomial has the form:
+     y = a0 + a1x + a2x^2 + ⋯ + amx^m
+3. Form the normal equations:
+   - Use the least squares method to minimize the sum of squared differences between actual and predicted values:
+     ∑(yi – polynomial)^2
+   - This gives a system of linear equations in the unknown coefficients a0, a1 ,..., am.
+4. Solve the system using Gaussian Elimination:
+   - Find the coefficients a0, a1, ..., am.
+5. Result:
+   - The polynomial function y = a0 + a1x +...+ amx^m approximates the given data.
 
 #### Polynomial Code
 ```cpp
-// Add your Polynomial Curve Fitting code here
+#include <iostream>
+#include <fstream>
+#include <iomanip>
+#include <cmath>
+
+using namespace std;
+
+int main() {
+    ifstream fin("input.txt");
+    ofstream fout("output.txt");
+
+    int n, m;
+    fin >> n;
+    fin >> m;
+
+    double x[20], y[20];
+
+    for (int i = 0; i < n; i++)
+        fin >> x[i];
+
+    for (int i = 0; i < n; i++)
+        fin >> y[i];
+
+    double A[20][21] = {0};
+
+    for (int i = 0; i <= m; i++) {
+        for (int j = 0; j <= m; j++) {
+            for (int k = 0; k < n; k++)
+                A[i][j] += pow(x[k], i + j);
+        }
+        for (int k = 0; k < n; k++)
+            A[i][m + 1] += y[k] * pow(x[k], i);
+    }
+
+    for (int i = 0; i <= m; i++) {
+        for (int j = i + 1; j <= m; j++) {
+            double ratio = A[j][i] / A[i][i];
+            for (int k = 0; k <= m + 1; k++)
+                A[j][k] -= ratio * A[i][k];
+        }
+    }
+
+    double a[20];
+    for (int i = m; i >= 0; i--) {
+        a[i] = A[i][m + 1];
+        for (int j = i + 1; j <= m; j++)
+            a[i] -= A[i][j] * a[j];
+        a[i] /= A[i][i];
+    }
+
+    fout << fixed << setprecision(4);
+    fout << "y = ";
+    for (int i = 0; i <= m; i++) {
+        fout << a[i];
+        if (i > 0) fout << "x^" << i;
+        if (i != m) fout << " + ";
+    }
+    fout << endl;
+
+    fin.close();
+    fout.close();
+
+    return 0;
+}
 ```
 
 #### Polynomial Input
 ```
-Add your Polynomial Curve Fitting input here
+5
+2
+1 2 3 4 5
+2 4 5 4 5
 ```
 
 #### Polynomial Output
 ```
-Add your Polynomial Curve Fitting output here
+y = 0.3714 + 1.3143x^1 + 0.0857x^2
 ```
 
 ---
 
 ## Numerical Integration
 
----
+Numerical integration is a method used to approximate the value of a definite integral when the exact integration is difficult or impossible to find analytically. It estimates the area under a curve using numerical techniques.
 
 ### Simpson's 1/3 Rule
 
-#### Simpsons 13 Theory
+#### Simpsons 1/3 Theory
 
-[Add your Simpson's 1/3 Rule theory here]
+Simpson’s 1/3 Rule is used to approximate definite integrals by dividing the interval into an even number of parts. It approximates the area under a curve using parabolic (quadratic) segments.
 
-#### Simpsons 13 Code
+Steps:
+1. Divide the interval [a,b] into n sub-intervals, where n must be even.
+2. Calculate the step size:
+   h = (b−a) / n
+3. Apply the formula:
+   - Multiply odd-indexed points by 4 and even-indexed points by 2.
+4. Sum up the results to get the approximate value of the integral.
+
+#### Simpsons 1/3 Code
 ```cpp
-// Add your Simpson's 1/3 Rule code here
+#include <iostream>
+#include <fstream>
+#include <cmath>
+
+using namespace std;
+
+double f(double x) {
+    return sin(x);
+}
+
+int main() {
+    ifstream fin("input.txt");
+    ofstream fout("output.txt");
+
+    double a, b;
+    int n;
+
+    fin >> a >> b >> n;
+
+    if (n % 2 != 0) {
+        fout << "Error: Number of intervals must be even for Simpson's 1/3 Rule." << endl;
+        return 0;
+    }
+
+    double h = (b - a) / n;
+    double sum = f(a) + f(b);
+
+    for (int i = 1; i < n; i++) {
+        double x = a + i * h;
+        if (i % 2 == 0)
+            sum += 2 * f(x);  
+        else
+            sum += 4 * f(x);   
+    }
+
+    double I = (h / 3.0) * sum;
+
+    fout << "Value of integral : " << I << endl;
+
+    fin.close();
+    fout.close();
+
+    return 0;
+}
 ```
 
-#### Simpsons 13 Input
+#### Simpsons 1/3 Input
 ```
-Add your Simpson's 1/3 Rule input here
+0
+3.1416
+6
 ```
 
-#### Simpsons 13 Output
+#### Simpsons 1/3 Output
 ```
-Add your Simpson's 1/3 Rule output here
+Value of integral : 2.00086
 ```
 
 ---
 
 ### Simpson's 3/8 Rule
 
-#### Simpsons 38 Theory
+#### Simpsons 3/8 Theory
 
-[Add your Simpson's 3/8 Rule theory here]
+Simpson’s 3/8 Rule is used to approximate definite integrals by dividing the interval into parts that are a multiple of three. It is a type of formula that approximates the area under a curve using cubic polynomials.
 
-#### Simpsons 38 Code
+Steps:
+1. Divide the interval [a,b] into n sub-intervals, where n must be a multiple of 3.
+2. Calculate the step size:
+   h=(b−a)/n
+3. Apply the formula:
+   - Multiply function values at every third point by 2.
+   - Multiply function values at other points by 3.
+4. Sum up the results to get the approximate value of the integral.
+
+#### Simpsons 3/8 Code
 ```cpp
-// Add your Simpson's 3/8 Rule code here
+#include <iostream>
+#include <fstream>
+#include <cmath>
+
+using namespace std;
+
+double f(double x) {
+    return sin(x);
+}
+
+int main() {
+    ifstream fin("input.txt");
+    ofstream fout("output.txt");
+
+    double a, b;
+    int n;
+
+    fin >> a >> b >> n;
+
+    if (n % 3 != 0) {
+        fout << "Error: Number of intervals must be a multiple of 3." << endl;
+        return 0;
+    }
+
+    double h = (b - a) / n;
+    double sum = f(a) + f(b);
+
+    for (int i = 1; i < n; i++) {
+        double x = a + i * h;
+        if (i % 3 == 0)
+            sum += 2 * f(x);
+        else
+            sum += 3 * f(x);
+    }
+
+    double I = (3 * h / 8.0) * sum;
+
+    fout << "Value of integral : " << I << endl;
+
+    fin.close();
+    fout.close();
+
+    return 0;
+}
 ```
 
-#### Simpsons 38 Input
+#### Simpsons 3/8 Input
 ```
-Add your Simpson's 3/8 Rule input here
+0
+3.1416
+6
 ```
 
-#### Simpsons 38 Output
+#### Simpsons 3/8 Output
 ```
-Add your Simpson's 3/8 Rule output here
+Value of integral : 2.00201
 ```
 
 ---
+
