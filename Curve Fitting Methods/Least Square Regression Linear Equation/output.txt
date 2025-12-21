@@ -1,0 +1,1 @@
+Linear Equation: y = 1.3000 + 0.9000x

@@ -1,0 +1,2 @@
+Regression Equation: T = 3.186407 + 0.776488 * e^(t/4)
+T when t = 6: 6.666383
